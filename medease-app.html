@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedEase – Medication & Pharmacy App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --maroon: #6B1020;
+    --maroon-light: #8B1A2E;
+    --maroon-dark: #4A0B16;
+    --gold: #C9A227;
+    --gold-light: #E8C547;
+    --gold-pale: #FFF8E7;
+    --cream: #FAF6F0;
+    --white: #FFFFFF;
+    --gray-soft: #F2EDE8;
+    --gray-mid: #8C7B6E;
+    --text-dark: #2C1A0E;
+    --text-medium: #5C4033;
+    --green: #2D7A3A;
+    --green-light: #E8F5EA;
+    --red: #C0392B;
+    --red-light: #FDECEA;
+    --blue: #1A5276;
+    --blue-light: #EBF5FB;
+    --orange: #D35400;
+    --orange-light: #FEF0E7;
+    --radius: 20px;
+    --radius-sm: 12px;
+    --shadow: 0 4px 20px rgba(107,16,32,0.12);
+    --shadow-lg: 0 8px 40px rgba(107,16,32,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── PHONE SHELL ── */
+  .phone {
+    width: 390px;
+    min-height: 844px;
+    background: var(--cream);
+    border-radius: 48px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25), 0 0 0 10px #1a1a1a, 0 0 0 12px #333;
+    margin: 32px auto;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    background: var(--maroon);
+    padding: 12px 28px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--gold-light);
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .status-bar .notch {
+    width: 110px; height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 16px 16px;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+    padding: 18px 24px 20px;
+    flex-shrink: 0;
+  }
+  .app-header .greeting {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .app-header .name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--white);
+    margin-top: 2px;
+  }
+  .app-header .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold);
+    color: var(--maroon-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  .app-header .badge .dot {
+    width: 7px; height: 7px;
+    background: var(--maroon-dark);
+    border-radius: 50%;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--maroon-dark);
+    flex-shrink: 0;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    background: var(--maroon-dark);
+    padding: 0 12px 0;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 10px 4px 12px;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-tab.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+  .nav-tab .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex: 1; overflow-y: auto; padding: 20px 18px 100px; }
+  .screen.active { display: block; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: var(--white);
+    border-top: 1px solid rgba(107,16,32,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    z-index: 10;
+  }
+  .bnav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .bnav-btn .bnav-icon { font-size: 22px; }
+  .bnav-btn .bnav-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gray-mid);
+    letter-spacing: 0.3px;
+  }
+  .bnav-btn.active .bnav-label { color: var(--maroon); }
+  .bnav-btn.active { background: rgba(107,16,32,0.06); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  /* ── TODAY'S MEDS ── */
+  .med-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-soft);
+    cursor: pointer;
+  }
+  .med-item:last-child { border-bottom: none; }
+  .pill-icon {
+    width: 54px; height: 54px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .pill-icon .pill-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    border: 2px solid var(--white);
+  }
+  .med-info { flex: 1; }
+  .med-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .med-detail {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin-top: 2px;
+  }
+  .med-time {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-mid);
+    text-align: right;
+  }
+  .check-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 2.5px solid #DDD;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .check-btn.taken {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--gray-soft);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--maroon), var(--gold));
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+  }
+
+  /* ── ALERT BANNER ── */
+  .alert-banner {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .alert-banner.warning { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .alert-banner.info { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .alert-banner.success { background: var(--green-light); border-left: 4px solid var(--green); }
+  .alert-banner .alert-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .alert-banner .alert-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .alert-banner .alert-text {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  /* ── BIG BUTTON ── */
+  .big-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .big-btn:active { transform: scale(0.97); }
+  .big-btn.primary {
+    background: var(--maroon);
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(107,16,32,0.3);
+  }
+  .big-btn.secondary {
+    background: var(--gold);
+    color: var(--maroon-dark);
+    box-shadow: 0 4px 16px rgba(201,162,39,0.3);
+  }
+  .big-btn.ghost {
+    background: var(--gray-soft);
+    color: var(--text-medium);
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-dark);
+    margin: 20px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── PHARMACY ── */
+  .rx-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rx-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rx-icon {
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .rx-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .rx-sub {
+    font-size: 13px;
+    color: var(--text-medium);
+  }
+  .rx-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.3px;
+  }
+  .rx-status.ready { background: var(--green-light); color: var(--green); }
+  .rx-status.pending { background: var(--orange-light); color: var(--orange); }
+  .rx-status.partial { background: var(--blue-light); color: var(--blue); }
+  .rx-status .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .rx-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .refill-btn {
+    padding: 10px 20px;
+    border-radius: 99px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .refill-btn:active { transform: scale(0.96); }
+  .refill-btn.tap-refill { background: var(--maroon); color: var(--white); }
+  .refill-btn.schedule { background: var(--gold-pale); color: var(--maroon); }
+
+  /* ── PILL DETAIL MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(44,26,14,0.55);
+    z-index: 20;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--white);
+    border-radius: 28px 28px 0 0;
+    padding: 24px 24px 40px;
+    width: 100%;
+    max-height: 85%;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--gray-soft);
+    border-radius: 99px;
+    margin: 0 auto 20px;
+  }
+  .modal-pill-img {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px;
+  }
+  .modal-pill-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-dark);
+    text-align: center;
+  }
+  .modal-pill-dose {
+    font-size: 15px;
+    color: var(--text-medium);
+    text-align: center;
+    margin-top: 4px;
+  }
+  .instruction-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-soft);
+  }
+  .instruction-step:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--maroon);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text {
+    font-size: 15px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    padding-top: 5px;
+  }
+
+  /* ── PILL VISUAL ── */
+  .pill-visual {
+    display: flex;
+    gap: 10px;
+    background: var(--gray-soft);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 14px 0;
+    align-items: center;
+  }
+  .pill-swatch {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    flex-shrink: 0;
+  }
+  .pill-shape-info {
+    font-size: 13px;
+    color: var(--text-medium);
+  }
+  .pill-shape-info strong {
+    display: block;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  /* ── MISSED DOSE SECTION ── */
+  .missed-box {
+    background: var(--red-light);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 10px 0;
+    border: 1.5px solid #F5C6C6;
+  }
+  .missed-box-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .missed-box p {
+    font-size: 13px;
+    color: var(--text-medium);
+    line-height: 1.5;
+  }
+
+  /* ── CAREGIVER SECTION ── */
+  .caregiver-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold-pale);
+    border: 1.5px solid var(--gold);
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--maroon-dark);
+    margin: 4px;
+    cursor: pointer;
+  }
+
+  /* ── SCHEDULE SCREEN ── */
+  .time-block {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .time-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gray-mid);
+    width: 72px;
+    padding-top: 14px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .time-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .time-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    margin-top: 16px;
+    flex-shrink: 0;
+  }
+  .time-connector {
+    flex: 1;
+    width: 2px;
+    background: var(--gray-soft);
+    margin: 4px 0;
+  }
+  .time-content { flex: 1; }
+
+  /* ── SCROLLBAR ── */
+  .screen::-webkit-scrollbar { width: 4px; }
+  .screen::-webkit-scrollbar-track { background: transparent; }
+  .screen::-webkit-scrollbar-thumb { background: var(--gray-soft); border-radius: 99px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: absolute;
+    top: 130px;
+    left: 20px; right: 20px;
+    background: var(--text-dark);
+    color: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── REFILL SUCCESS ── */
+  .success-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(45,122,58,0.92);
+    z-index: 25;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 40px;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .success-overlay.open { display: flex; }
+  .success-icon { font-size: 72px; }
+  .success-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+  }
+  .success-sub { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+
+  /* ── REMINDER CHIPS ── */
+  .reminder-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .reminder-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--maroon);
+    color: white;
+    border-radius: 99px;
+    padding: 7px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .reminder-chip.inactive {
+    background: var(--gray-soft);
+    color: var(--gray-mid);
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="notch"></div>
+    <span style="margin-left:16px">9:41</span>
+    <span style="margin-right:8px">📶 🔋</span>
+  </div>
+
+  <!-- App Header -->
+  <div class="app-header">
+    <div class="header-row">
+      <div>
+        <div class="greeting">Good morning,</div>
+        <div class="name">Alex Johnson 👋</div>
+        <div class="badge"><span class="dot"></span> 2 meds due today</div>
+      </div>
+      <div class="avatar">AJ</div>
+    </div>
+  </div>
+
+  <!-- Top Tabs -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('home',this)">
+      <span class="tab-icon">🏠</span>Home
+    </button>
+    <button class="nav-tab" onclick="switchTab('schedule',this)">
+      <span class="tab-icon">📅</span>Schedule
+    </button>
+    <button class="nav-tab" onclick="switchTab('pharmacy',this)">
+      <span class="tab-icon">🏪</span>Pharmacy
+    </button>
+    <button class="nav-tab" onclick="switchTab('care',this)">
+      <span class="tab-icon">👥</span>Care Team
+    </button>
+  </div>
+
+  <!-- ══════════ HOME SCREEN ══════════ -->
+  <div class="screen active" id="screen-home">
+
+    <!-- Alert -->
+    <div class="alert-banner warning" style="margin-top:4px">
+      <div class="alert-icon">⚠️</div>
+      <div>
+        <div class="alert-title">Metformin appearance changed</div>
+        <div class="alert-text">Your pharmacy switched brands. The pill looks different — it's still the same medicine. See photo inside.</div>
+      </div>
+    </div>
+
+    <!-- Today's Progress -->
+    <div class="card">
+      <div class="card-title">Today's Progress</div>
+      <div class="progress-label">
+        <span>1 of 3 taken</span>
+        <span id="progress-pct">33%</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progress-bar" style="width:33%"></div>
+      </div>
+    </div>
+
+    <!-- Today's Medications -->
+    <div class="card">
+      <div class="card-title">Today's Medications</div>
+
+      <div class="med-item" onclick="openMedDetail('metformin')">
+        <div class="pill-icon" style="background:#FDE8EC">
+          💊
+          <div class="pill-badge" style="background:#C0392B;color:white">!</div>
+        </div>
+        <div class="med-info">
+          <div class="med-name">Metformin</div>
+          <div class="med-detail">500mg · With breakfast 🍳</div>
+        </div>
+        <div style="text-align:right">
+          <div class="med-time">8:00 AM</div>
+          <button class="check-btn" id="check-metformin" onclick="event.stopPropagation();takeMed('metformin')">○</button>
+        </div>
+      </div>
+
+      <div class="med-item" onclick="openMedDetail('lisinopril')">
+        <div class="pill-icon" style="background:#E8F5EA">💊</div>
+        <div class="med-info">
+          <div class="med-name">Lisinopril</div>
+          <div class="med-detail">10mg · With lunch 🥗</div>
+        </div>
+        <div style="text-align:right">
+          <div class="med-time">12:00 PM</div>
+          <button class="check-btn taken" id="check-lisinopril" onclick="event.stopPropagation();">✓</button>
+        </div>
+      </div>
+
+      <div class="med-item" onclick="openMedDetail('atorvastatin')">
+        <div class="pill-icon" style="background:#EBF5FB">💊</div>
+        <div class="med-info">
+          <div class="med-name">Atorvastatin</div>
+          <div class="med-detail">20mg · Before bed 🌙</div>
+        </div>
+        <div style="text-align:right">
+          <div class="med-time">9:00 PM</div>
+          <button class="check-btn" id="check-atorvastatin" onclick="event.stopPropagation();takeMed('atorvastatin')">○</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Missed Dose Help -->
+    <div class="card">
+      <div class="card-title">Missed a Dose?</div>
+      <div class="missed-box">
+        <div class="missed-box-title">🔴 What to do if you forget</div>
+        <p>Take it as soon as you remember. If it's almost time for your next dose, skip the missed one. <strong>Never take two doses at once.</strong></p>
+      </div>
+      <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📱 Sending message to your care team...')">
+        📞 Ask My Care Team
+      </button>
+    </div>
+
+  </div><!-- end home -->
+
+  <!-- ══════════ SCHEDULE SCREEN ══════════ -->
+  <div class="screen" id="screen-schedule">
+    <div class="section-heading">📅 Daily Routine</div>
+    <div class="alert-banner info">
+      <div class="alert-icon">💡</div>
+      <div>
+        <div class="alert-title">Tip: Tie meds to routines</div>
+        <div class="alert-text">Taking medicine at the same time each day — like with meals — makes it easier to remember.</div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card" style="padding:18px 14px">
+
+      <div class="time-block">
+        <div class="time-label">8:00 AM</div>
+        <div class="time-line">
+          <div class="time-dot" style="background:var(--maroon)"></div>
+          <div class="time-connector"></div>
+        </div>
+        <div class="time-content" style="padding:10px 0 20px">
+          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🍳 Breakfast time</div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Metformin 500mg</strong></div>
+          <div class="reminder-row" style="margin-top:8px">
+            <div class="reminder-chip">🔔 Alarm set</div>
+            <div class="reminder-chip inactive">📢 No speaker alarm</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <div class="time-label">12:00 PM</div>
+        <div class="time-line">
+          <div class="time-dot" style="background:var(--green)"></div>
+          <div class="time-connector"></div>
+        </div>
+        <div class="time-content" style="padding:10px 0 20px">
+          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🥗 Lunchtime</div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Lisinopril 10mg</strong></div>
+          <div class="reminder-row" style="margin-top:8px">
+            <div class="reminder-chip">🔔 Alarm set</div>
+            <div class="reminder-chip">📢 Smart speaker</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <div class="time-label">9:00 PM</div>
+        <div class="time-line">
+          <div class="time-dot" style="background:var(--blue)"></div>
+        </div>
+        <div class="time-content" style="padding:10px 0 0">
+          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🌙 Bedtime routine</div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Atorvastatin 20mg</strong></div>
+          <div class="reminder-row" style="margin-top:8px">
+            <div class="reminder-chip">🔔 Alarm set</div>
+            <div class="reminder-chip inactive">📢 No speaker alarm</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Add Reminder -->
+    <button class="big-btn primary" onclick="showToast('🔔 Opening alarm settings...')">
+      ➕ Add a New Reminder
+    </button>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Weekly Overview</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center">
+        <div v-for="d in days">
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">M</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">T</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">W</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">Th</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:#F5C6C6;display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✗</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">F</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">Sa</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">Su</div>
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">→</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end schedule -->
+
+  <!-- ══════════ PHARMACY SCREEN ══════════ -->
+  <div class="screen" id="screen-pharmacy">
+    <div class="section-heading">🏪 My Prescriptions</div>
+
+    <div class="alert-banner success">
+      <div class="alert-icon">✅</div>
+      <div>
+        <div class="alert-title">Lisinopril is ready to pick up!</div>
+        <div class="alert-text">Your prescription is ready at CVS Pharmacy. You can also request delivery below.</div>
+      </div>
+    </div>
+
+    <!-- Lisinopril - Ready -->
+    <div class="rx-card">
+      <div class="rx-top">
+        <div class="rx-icon" style="background:var(--green-light);font-size:26px">💊</div>
+        <div style="flex:1">
+          <div class="rx-name">Lisinopril 10mg</div>
+          <div class="rx-sub">30 tablets · Dr. Martinez</div>
+        </div>
+        <div class="rx-status ready"><span class="status-dot"></span>Ready</div>
+      </div>
+      <div style="background:var(--gray-soft);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--text-medium)">
+        📍 CVS Pharmacy, 123 Main St<br>
+        <strong style="color:var(--green)">✓ Ready for pickup or delivery</strong>
+      </div>
+      <div class="rx-bottom">
+        <button class="refill-btn schedule" onclick="showToast('🚗 Opening delivery scheduler...')">📦 Schedule Delivery</button>
+        <button class="refill-btn tap-refill" onclick="showRefillSuccess()">1-Tap Refill 🔄</button>
+      </div>
+    </div>
+
+    <!-- Metformin - Partial -->
+    <div class="rx-card">
+      <div class="rx-top">
+        <div class="rx-icon" style="background:var(--blue-light);font-size:26px">💊</div>
+        <div style="flex:1">
+          <div class="rx-name">Metformin 500mg</div>
+          <div class="rx-sub">60 tablets · Dr. Martinez</div>
+        </div>
+        <div class="rx-status partial"><span class="status-dot"></span>Partial</div>
+      </div>
+      <div style="background:var(--blue-light);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--blue)">
+        ℹ️ Only <strong>30 of 60 tablets</strong> are available now. The rest will arrive Thursday. <strong>Appearance has changed</strong> — see your Home tab for info.
+      </div>
+      <div class="rx-bottom">
+        <button class="refill-btn schedule" onclick="showToast('📋 Opening provider-pharmacist log...')">💬 See Provider Notes</button>
+        <button class="refill-btn tap-refill" onclick="showToast('📬 Refill requested for remaining tablets!')">Request Rest 🔄</button>
+      </div>
+    </div>
+
+    <!-- Atorvastatin - Pending -->
+    <div class="rx-card">
+      <div class="rx-top">
+        <div class="rx-icon" style="background:var(--orange-light);font-size:26px">💊</div>
+        <div style="flex:1">
+          <div class="rx-name">Atorvastatin 20mg</div>
+          <div class="rx-sub">30 tablets · Dr. Martinez</div>
+        </div>
+        <div class="rx-status pending"><span class="status-dot"></span>Pending</div>
+      </div>
+      <div style="background:var(--orange-light);border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--orange)">
+        ⏳ Prescription sent to pharmacy. Usually ready in <strong>1–2 days</strong>. You'll get an alert when it's ready.
+      </div>
+      <div class="rx-bottom">
+        <button class="refill-btn schedule" onclick="showToast('🔔 You will be notified when it is ready!')">🔔 Notify When Ready</button>
+        <button class="refill-btn tap-refill" onclick="showToast('📞 Calling pharmacy...')">📞 Call Pharmacy</button>
+      </div>
+    </div>
+
+    <!-- Provider-Pharmacist Log -->
+    <div class="card">
+      <div class="card-title">Provider–Pharmacist Log</div>
+      <div style="border-left:3px solid var(--maroon);padding-left:12px;margin-bottom:10px">
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--gray-mid)">Mar 26 · Dr. Martinez</div>
+        <div style="font-size:13px;color:var(--text-dark);margin-top:3px">Approved 3-month supply of Metformin. Note: generic brand substituted.</div>
+      </div>
+      <div style="border-left:3px solid var(--gold);padding-left:12px">
+        <div style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--gray-mid)">Mar 25 · CVS Pharmacy</div>
+        <div style="font-size:13px;color:var(--text-dark);margin-top:3px">Partial fill issued. Remaining tablets expected Thursday. Patient notified via app.</div>
+      </div>
+    </div>
+
+  </div><!-- end pharmacy -->
+
+  <!-- ══════════ CARE TEAM SCREEN ══════════ -->
+  <div class="screen" id="screen-care">
+    <div class="section-heading">👥 My Care Team</div>
+
+    <div class="alert-banner info">
+      <div class="alert-icon">💬</div>
+      <div>
+        <div class="alert-title">Care team can help you</div>
+        <div class="alert-text">If you miss a dose or are confused about your medicine, reach out anytime.</div>
+      </div>
+    </div>
+
+    <!-- Contacts -->
+    <div class="card">
+      <div class="card-title">Quick Contact</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+
+        <div style="display:flex;align-items:center;gap:14px;padding:10px;background:var(--gray-soft);border-radius:var(--radius-sm)">
+          <div style="width:46px;height:46px;border-radius:50%;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👩‍⚕️</div>
+          <div style="flex:1">
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px">Dr. Martinez</div>
+            <div style="font-size:12px;color:var(--gray-mid)">Primary Care · Mon–Fri</div>
+          </div>
+          <button class="refill-btn tap-refill" onclick="showToast('📞 Calling Dr. Martinez...')">Call</button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:14px;padding:10px;background:var(--gray-soft);border-radius:var(--radius-sm)">
+          <div style="width:46px;height:46px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👨‍👩‍👦</div>
+          <div style="flex:1">
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px">Mom (Sarah)</div>
+            <div style="font-size:12px;color:var(--gray-mid)">Caregiver · Notified on missed doses</div>
+          </div>
+          <button class="refill-btn schedule" onclick="showToast('📱 Texting Sarah...')">Text</button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:14px;padding:10px;background:var(--gray-soft);border-radius:var(--radius-sm)">
+          <div style="width:46px;height:46px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💊</div>
+          <div style="flex:1">
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px">CVS Pharmacy</div>
+            <div style="font-size:12px;color:var(--gray-mid)">123 Main St · 24/7</div>
+          </div>
+          <button class="refill-btn tap-refill" onclick="showToast('📞 Calling CVS Pharmacy...')">Call</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Setup -->
+    <div class="card">
+      <div class="card-title">Caregiver Alerts</div>
+      <div style="font-size:14px;color:var(--text-medium);margin-bottom:12px;line-height:1.5">
+        Your care team will <strong>automatically be notified</strong> if you miss a dose. Here's who gets alerted:
+      </div>
+      <div class="reminder-row">
+        <div class="caregiver-chip">👩‍👩‍👦 Mom (Sarah) ✓</div>
+        <div class="caregiver-chip">👩‍⚕️ Dr. Martinez ✓</div>
+        <div class="caregiver-chip" onclick="showToast('➕ Add another contact')">➕ Add someone</div>
+      </div>
+    </div>
+
+    <!-- Emergency -->
+    <button class="big-btn primary" style="background:var(--red);box-shadow:0 4px 16px rgba(192,57,43,0.3)" onclick="showToast('🚨 Connecting to emergency line...')">
+      🚨 Emergency Help
+    </button>
+
+  </div><!-- end care -->
+
+  <!-- ══════════ BOTTOM NAV ══════════ -->
+  <div class="bottom-nav">
+    <button class="bnav-btn active" onclick="switchBnav('home',this)">
+      <span class="bnav-icon">🏠</span>
+      <span class="bnav-label">Home</span>
+    </button>
+    <button class="bnav-btn" onclick="switchBnav('schedule',this)">
+      <span class="bnav-icon">📅</span>
+      <span class="bnav-label">Schedule</span>
+    </button>
+    <button class="bnav-btn" onclick="switchBnav('pharmacy',this)">
+      <span class="bnav-icon">🏪</span>
+      <span class="bnav-label">Pharmacy</span>
+    </button>
+    <button class="bnav-btn" onclick="switchBnav('care',this)">
+      <span class="bnav-icon">👥</span>
+      <span class="bnav-label">Care Team</span>
+    </button>
+  </div>
+
+  <!-- ══════════ MED DETAIL MODAL ══════════ -->
+  <div class="modal-overlay" id="med-modal" onclick="closeMedModal(event)">
+    <div class="modal-sheet" id="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ REFILL SUCCESS ══════════ -->
+  <div class="success-overlay" id="refill-success">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Refill Requested!</div>
+    <div class="success-sub">Your Lisinopril refill is on its way. You'll get an alert when it's ready for pickup or delivery.</div>
+    <button class="big-btn" style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)" onclick="closeRefillSuccess()">
+      Got it 👍
+    </button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span id="toast-text">Done!</span>
+  </div>
+</div><!-- end phone -->
+
+<script>
+// ── TAB SWITCHING ──
+function switchTab(id, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  el.classList.add('active');
+  syncBnav(id);
+}
+function switchBnav(id, el) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  el.classList.add('active');
+  syncNavTab(id);
+}
+function syncBnav(id) {
+  document.querySelectorAll('.bnav-btn').forEach((b,i) => {
+    const ids = ['home','schedule','pharmacy','care'];
+    b.classList.toggle('active', ids[i] === id);
+  });
+}
+function syncNavTab(id) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    const ids = ['home','schedule','pharmacy','care'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+}
+
+// ── MED TAKING ──
+let takenCount = 1; // lisinopril pre-taken
+function takeMed(id) {
+  const btn = document.getElementById('check-' + id);
+  if (btn.classList.contains('taken')) return;
+  btn.classList.add('taken');
+  btn.textContent = '✓';
+  takenCount++;
+  updateProgress();
+  showToast('✅ ' + id.charAt(0).toUpperCase() + id.slice(1) + ' marked as taken!');
+}
+function updateProgress() {
+  const pct = Math.round((takenCount / 3) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  const lbl = document.querySelector('.progress-label span');
+  lbl.textContent = takenCount + ' of 3 taken';
+}
+
+// ── MED DETAIL ──
+const medData = {
+  metformin: {
+    name: 'Metformin', dose: '500mg · Take with food',
+    color: '#E74C3C', shape: 'Round, white tablet · NEW: slightly larger',
+    emoji: '💊', bg: '#FDE8EC',
+    steps: [
+      'Take 1 tablet (500mg)',
+      'Swallow with a full glass of water 💧',
+      'Take with your breakfast — this helps your stomach',
+      'Do NOT skip doses. If you forget, see the Missed Dose box below.'
+    ],
+    changed: true
+  },
+  lisinopril: {
+    name: 'Lisinopril', dose: '10mg · Once daily at lunch',
+    color: '#2ECC71', shape: 'Small round, light green tablet',
+    emoji: '💊', bg: '#E8F5EA',
+    steps: [
+      'Take 1 tablet (10mg)',
+      'Swallow with water 💧',
+      'Take at lunchtime — same time every day',
+      'You can take with or without food'
+    ],
+    changed: false
+  },
+  atorvastatin: {
+    name: 'Atorvastatin', dose: '20mg · Once daily at bedtime',
+    color: '#3498DB', shape: 'Oval, white film-coated tablet',
+    emoji: '💊', bg: '#EBF5FB',
+    steps: [
+      'Take 1 tablet (20mg)',
+      'Swallow with water 💧',
+      'Take at the same time each night before bed 🌙',
+      'Avoid grapefruit juice while on this medicine'
+    ],
+    changed: false
+  }
+};
+function openMedDetail(id) {
+  const m = medData[id];
+  let html = `
+    <div class="modal-pill-img" style="background:${m.bg}">${m.emoji}</div>
+    <div class="modal-pill-name">${m.name}</div>
+    <div class="modal-pill-dose">${m.dose}</div>
+  `;
+  if (m.changed) {
+    html += `<div class="alert-banner warning" style="margin:14px 0">
+      <div class="alert-icon">⚠️</div>
+      <div>
+        <div class="alert-title">Appearance changed!</div>
+        <div class="alert-text">Your pharmacy switched to a generic brand. It is the same medicine — just looks a little different.</div>
+      </div>
+    </div>`;
+  }
+  html += `
+    <div class="pill-visual">
+      <div class="pill-swatch" style="background:${m.color}"></div>
+      <div class="pill-shape-info">
+        <strong>How it looks</strong>
+        ${m.shape}
+      </div>
+    </div>
+    <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark);margin:16px 0 8px">📋 How to take it</div>
+  `;
+  m.steps.forEach((s, i) => {
+    html += `<div class="instruction-step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-text">${s}</div>
+    </div>`;
+  });
+  html += `
+    <div class="missed-box" style="margin-top:16px">
+      <div class="missed-box-title">🔴 If you miss a dose</div>
+      <p>Take it as soon as you remember. If your next dose is in less than 2 hours, skip the missed one. Never double up.</p>
+    </div>
+    <button class="big-btn primary" style="margin-top:16px" onclick="closeMedModalDirect();takeMed('${id}')">
+      ✅ Mark as Taken
+    </button>
+    <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📞 Sending message to Dr. Martinez...');closeMedModalDirect()">
+      ❓ Ask My Doctor
+    </button>
+  `;
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('med-modal').classList.add('open');
+}
+function closeMedModal(e) {
+  if (e.target === document.getElementById('med-modal')) {
+    document.getElementById('med-modal').classList.remove('open');
+  }
+}
+function closeMedModalDirect() {
+  document.getElementById('med-modal').classList.remove('open');
+}
+
+// ── REFILL ──
+function showRefillSuccess() {
+  document.getElementById('refill-success').classList.add('open');
+}
+function closeRefillSuccess() {
+  document.getElementById('refill-success').classList.remove('open');
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-text').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
