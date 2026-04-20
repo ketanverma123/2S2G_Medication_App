@@ -443,6 +443,14 @@
     </div>
   </div>
 
+ <!-- ══════════ PILL IMAGE MODAL ══════════ -->
+  <div class="modal-overlay" id="pill-image-modal" onclick="closePillImageModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div id="pill-image-content" style="text-align:center;"></div>
+  </div>
+</div>
+
   <!-- ══════════ REFILL SUCCESS ══════════ -->
   <div class="success-overlay" id="refill-success">
     <div class="success-icon">✅</div>
@@ -628,8 +636,8 @@ function addAlert(newAlert) {
 const medData = {
   metformin: {
     name: 'Metformin', dose: '500mg · Take with food',
-    color: '#E74C3C', shape: 'Round, white tablet · NEW: slightly larger',
-    emoji: '💊', bg: '#FDE8EC',
+    color: '#E74C3C', shape: 'Oval, white tablet · NEW: Z shown on one side, 69 on the other',
+    emoji: '💊', bg: '#FDE8EC', image: 'drug_profiles/metformin.jpg',
     steps: [
       'Take 1 tablet (500mg)',
       'Swallow with a full glass of water 💧',
@@ -640,8 +648,8 @@ const medData = {
   },
   lisinopril: {
     name: 'Lisinopril', dose: '10mg · Once daily at lunch',
-    color: '#2ECC71', shape: 'Small round, light green tablet',
-    emoji: '💊', bg: '#E8F5EA',
+    color: '#2ECC71', shape: 'Small, round, pink tablet, E3 shown on one side',
+    emoji: '💊', bg: '#E8F5EA', image: 'drug_profiles/lisinopril.jpeg',
     steps: [
       'Take 1 tablet (10mg)',
       'Swallow with water 💧',
@@ -652,8 +660,8 @@ const medData = {
   },
   atorvastatin: {
     name: 'Atorvastatin', dose: '20mg · Once daily at bedtime',
-    color: '#3498DB', shape: 'Oval, white film-coated tablet',
-    emoji: '💊', bg: '#EBF5FB',
+    color: '#3498DB', shape: 'Oval, white, 11 shown on one side',
+    emoji: '💊', bg: '#EBF5FB', image: 'drug_profiles/atorvastatin.png',
     steps: [
       'Take 1 tablet (20mg)',
       'Swallow with water 💧',
@@ -699,6 +707,7 @@ function checkMissedDoses() {
   });
 }
 
+// ── MED DETAIL MODAL ──
 function openMedDetail(id) {
   const m = medData[id];
   let html = `
@@ -723,6 +732,15 @@ function openMedDetail(id) {
         ${m.shape}
       </div>
     </div>
+
+    <button
+      class="big-btn ghost"
+      style="margin-top:10px; margin-bottom:6px;"
+      onclick="showPillImage('${id}')"
+    >
+      🖼️ View Pill Image
+    </button>
+
     <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark);margin:16px 0 8px">📋 How to take it</div>
   `;
   m.steps.forEach((s, i) => {
@@ -753,6 +771,37 @@ function closeMedModal(e) {
 }
 function closeMedModalDirect() {
   document.getElementById('med-modal').classList.remove('open');
+}
+
+// ── PILL IMAGE MODAL ──
+function showPillImage(id) {
+  const m = medData[id];
+  if (!m || !m.image) return;
+
+  document.getElementById('pill-image-content').innerHTML = `
+    <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
+      ${m.name}
+    </div>
+    <div style="font-size:14px;color:var(--text-medium);margin-bottom:16px;">
+      ${m.dose}
+    </div>
+    <img
+      src="${m.image}"
+      alt="Reference image for ${m.name}"
+      style="max-width:100%; width:220px; height:auto; border-radius:16px; box-shadow:var(--shadow); margin-bottom:14px;"
+    >
+    <div style="font-size:13px;color:var(--text-medium);line-height:1.5;">
+      ${m.shape}
+    </div>
+  `;
+
+  document.getElementById('pill-image-modal').classList.add('open');
+}
+
+function closePillImageModal(event) {
+  if (event.target === document.getElementById('pill-image-modal')) {
+    document.getElementById('pill-image-modal').classList.remove('open');
+  }
 }
 
 // ── REFILL ──
