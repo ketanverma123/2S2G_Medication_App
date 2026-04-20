@@ -8,7 +8,9 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+<button class="big-btn ghost" onclick="resetAppState()">
+  🔄 Reset Demo
+</button>
 <div class="phone">
   <!-- Status Bar -->
   <div class="status-bar">
@@ -106,45 +108,7 @@
     <!-- Today's Medications -->
     <div class="card">
       <div class="card-title">Today's Medications</div>
-
-      <div class="med-item" onclick="openMedDetail('metformin')">
-        <div class="pill-icon" style="background:#FDE8EC">
-          💊
-          <div class="pill-badge" style="background:#C0392B;color:white">!</div>
-        </div>
-        <div class="med-info">
-          <div class="med-name">Metformin</div>
-          <div class="med-detail">500mg · With breakfast 🍳</div>
-        </div>
-        <div style="text-align:right">
-          <div class="med-time">8:00 AM</div>
-          <button class="check-btn" id="check-metformin" onclick="event.stopPropagation();takeMed('metformin')">○</button>
-        </div>
-      </div>
-
-      <div class="med-item" onclick="openMedDetail('lisinopril')">
-        <div class="pill-icon" style="background:#E8F5EA">💊</div>
-        <div class="med-info">
-          <div class="med-name">Lisinopril</div>
-          <div class="med-detail">10mg · With lunch 🥗</div>
-        </div>
-        <div style="text-align:right">
-          <div class="med-time">12:00 PM</div>
-          <button class="check-btn taken" id="check-lisinopril" onclick="event.stopPropagation();">✓</button>
-        </div>
-      </div>
-
-      <div class="med-item" onclick="openMedDetail('atorvastatin')">
-        <div class="pill-icon" style="background:#EBF5FB">💊</div>
-        <div class="med-info">
-          <div class="med-name">Atorvastatin</div>
-          <div class="med-detail">20mg · Before bed 🌙</div>
-        </div>
-        <div style="text-align:right">
-          <div class="med-time">9:00 PM</div>
-          <button class="check-btn" id="check-atorvastatin" onclick="event.stopPropagation();takeMed('atorvastatin')">○</button>
-        </div>
-      </div>
+      <div id="today-medications-list"></div>
     </div>
 
     <!-- Missed Dose Help -->
@@ -174,54 +138,7 @@
 
     <!-- Timeline -->
     <div class="card" style="padding:18px 14px">
-
-      <div class="time-block">
-        <div class="time-label">8:00 AM</div>
-        <div class="time-line">
-          <div class="time-dot" style="background:var(--maroon)"></div>
-          <div class="time-connector"></div>
-        </div>
-        <div class="time-content" style="padding:10px 0 20px">
-          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🍳 Breakfast time</div>
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Metformin 500mg</strong></div>
-          <div class="reminder-row" style="margin-top:8px">
-            <div class="reminder-chip">🔔 Alarm set</div>
-            <div class="reminder-chip inactive">📢 No speaker alarm</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="time-block">
-        <div class="time-label">12:00 PM</div>
-        <div class="time-line">
-          <div class="time-dot" style="background:var(--green)"></div>
-          <div class="time-connector"></div>
-        </div>
-        <div class="time-content" style="padding:10px 0 20px">
-          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🥗 Lunchtime</div>
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Lisinopril 10mg</strong></div>
-          <div class="reminder-row" style="margin-top:8px">
-            <div class="reminder-chip">🔔 Alarm set</div>
-            <div class="reminder-chip">📢 Smart speaker</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="time-block">
-        <div class="time-label">9:00 PM</div>
-        <div class="time-line">
-          <div class="time-dot" style="background:var(--blue)"></div>
-        </div>
-        <div class="time-content" style="padding:10px 0 0">
-          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">🌙 Bedtime routine</div>
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">Take <strong>Atorvastatin 20mg</strong></div>
-          <div class="reminder-row" style="margin-top:8px">
-            <div class="reminder-chip">🔔 Alarm set</div>
-            <div class="reminder-chip inactive">📢 No speaker alarm</div>
-          </div>
-        </div>
-      </div>
-
+      <div id="schedule-reminders-list"></div>
     </div>
 
     <!-- Add Reminder -->
@@ -496,6 +413,233 @@ function syncNavTab(id) {
   });
 }
 
+// ── APP STATE MANAGEMENT ──
+const STORAGE_KEY = 'medeaseAppState';
+const MED_ICON = '💊';
+
+const MED_BACKGROUND_COLORS = [
+  '#FDECEA', // soft red
+  '#EAF4EC', // soft green
+  '#EBF5FB', // soft blue
+  '#FEF3E6', // soft orange
+  '#F4ECF7'  // soft purple
+];
+const REMINDER_DOT_COLORS = [
+  'var(--maroon)',
+  'var(--green)',
+  'var(--blue)',
+  'var(--orange)'
+];
+const defaultAppState = {
+  takenMeds: {},
+  dismissedAlerts: [],
+  medicines: [
+    {
+      id: 'metformin',
+      name: 'Metformin',
+      shape: 'Oval, white tablet · NEW: Z shown on one side, 69 on the other',
+      image: 'drug_profiles/metformin.jpg',
+      steps: [
+        'Take 1 tablet (500mg)',
+        'Swallow with a full glass of water 💧',
+        'Take with your breakfast — this helps your stomach',
+        'Do NOT skip doses. If you forget, see the Missed Dose box below.'
+      ],
+      changed: true
+    },
+    {
+      id: 'lisinopril',
+      name: 'Lisinopril',
+      shape: 'Small, round, pink tablet, E3 shown on one side',
+      image: 'drug_profiles/lisinopril.jpeg',
+      steps: [
+        'Take 1 tablet (10mg)',
+        'Swallow with water 💧',
+        'Take at lunchtime — same time every day',
+        'You can take with or without food'
+      ],
+      changed: false
+    },
+    {
+      id: 'atorvastatin',
+      name: 'Atorvastatin',
+      shape: 'Oval, white, 11 shown on one side',
+      image: 'drug_profiles/atorvastatin.png',
+      steps: [
+        'Take 1 tablet (20mg)',
+        'Swallow with water 💧',
+        'Take at the same time each night before bed 🌙',
+        'Avoid grapefruit juice while on this medicine'
+      ],
+      changed: false
+    }
+  ],
+  reminders: [
+    {
+      id: 'metformin-reminder',
+      medId: 'metformin',
+      label: 'Breakfast time',
+      time: '8:00 AM',
+      dosage: '500mg',
+      reminderType: 'Alarm set',
+      speaker: 'No speaker alarm',
+      smallNote: 'With breakfast 🍳'
+    },
+    {
+      id: 'lisinopril-reminder',
+      medId: 'lisinopril',
+      label: 'Lunchtime',
+      time: '12:00 PM',
+      dosage: '10mg',
+      reminderType: 'Alarm set',
+      speaker: 'Smart speaker',
+      smallNote: 'With lunch 🥗'
+    },
+    {
+      id: 'atorvastatin-reminder',
+      medId: 'atorvastatin',
+      label: 'Bedtime routine',
+      time: '9:00 PM',
+      dosage: '20mg',
+      reminderType: 'Alarm set',
+      speaker: 'No speaker alarm',
+      smallNote: 'Before bed 🌙'
+    }
+  ]
+};
+
+function loadState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  console.log('Loaded state:', saved);
+  if (!saved) return structuredClone(defaultAppState);
+
+  const parsed = JSON.parse(saved);
+
+  return {
+    ...structuredClone(defaultAppState),
+    ...parsed,
+    medicines: parsed.medicines || structuredClone(defaultAppState).medicines,
+    reminders: parsed.reminders || structuredClone(defaultAppState).reminders,
+    takenMeds: parsed.takenMeds || {},
+    dismissedAlerts: parsed.dismissedAlerts || []
+  };
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+}
+
+let appState = loadState();
+
+// Build a lookup object for medicines by ID for easy access in the med detail view
+function buildMedData() {
+  const data = {};
+
+  appState.medicines.forEach(med => {
+    data[med.id] = {
+      name: med.name,
+      shape: med.shape,
+      steps: med.steps,
+      image: med.image,
+      changed: med.changed
+    };
+  });
+
+  return data;
+}
+
+let medData = buildMedData();
+
+// -- Render today's medications list on the Home screen
+function renderTodayMedications() {
+  const container = document.getElementById('today-medications-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  appState.reminders.forEach((reminder, index) => {
+    const med = appState.medicines.find(m => m.id === reminder.medId);
+    if (!med) return;
+
+    const isTaken = !!appState.takenMeds[med.id];
+    const bgColor = MED_BACKGROUND_COLORS[index % MED_BACKGROUND_COLORS.length];
+    const alertBadge = med.changed
+      ? `<div class="pill-badge" style="background:#C0392B;color:white">!</div>`
+      : '';
+
+    container.innerHTML += `
+      <div class="med-item" onclick="openMedDetail('${med.id}')">
+        <div class="pill-icon" style="background:${bgColor}">
+          ${MED_ICON}
+          ${alertBadge}
+        </div>
+        <div class="med-info">
+          <div class="med-name">${med.name}</div>
+          <div class="med-detail">${reminder.dosage} · ${reminder.smallNote}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="med-time">${reminder.time}</div>
+          <button
+            class="check-btn ${isTaken ? 'taken' : ''}"
+            id="check-${med.id}"
+            onclick="event.stopPropagation();takeMed('${med.id}')"
+          >
+            ${isTaken ? '✓' : '○'}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// -- Render schedule reminders on the Schedule screen
+function renderScheduleReminders() {
+  const container = document.getElementById('schedule-reminders-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  appState.reminders.forEach((reminder, index) => {
+    const med = appState.medicines.find(m => m.id === reminder.medId);
+    if (!med) return;
+
+    const connector = index < appState.reminders.length - 1
+      ? `<div class="time-connector"></div>`
+      : '';
+
+    const speakerChip = reminder.speaker === 'Smart speaker'
+      ? `<div class="reminder-chip">📢 Smart speaker</div>`
+      : `<div class="reminder-chip inactive">📢 No speaker alarm</div>`;
+
+    const dotColor = REMINDER_DOT_COLORS[index % REMINDER_DOT_COLORS.length];
+
+    container.innerHTML += `
+      <div class="time-block">
+        <div class="time-label">${reminder.time}</div>
+        <div class="time-line">
+          <div class="time-dot" style="background:${dotColor}"></div>
+          ${connector}
+        </div>
+        <div class="time-content" style="padding:10px 0 20px">
+          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">
+            ${reminder.label}
+          </div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
+            Take <strong>${med.name}</strong>
+          </div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
+            ${reminder.smallNote}
+          </div>
+          <div class="reminder-row" style="margin-top:8px">
+            <div class="reminder-chip">🔔 ${reminder.reminderType}</div>
+            ${speakerChip}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
 // ── MED TAKING ──
 let takenCount = 1; // lisinopril pre-taken
 const missedDoseAlertsShown = {};
@@ -515,9 +659,14 @@ let currentAlertIndex = 0;
 function takeMed(id) {
   const btn = document.getElementById('check-' + id);
   if (btn.classList.contains('taken')) return;
+
+  appState.takenMeds[id] = true;
+  saveState();
+
   btn.classList.add('taken');
   btn.textContent = '✓';
-  takenCount++;
+
+  takenCount = Object.keys(appState.takenMeds).length;
   updateProgress();
 
   alerts = alerts.filter(alert => alert.id !== 'missed-' + id);
@@ -527,14 +676,17 @@ function takeMed(id) {
   }
 
   renderCurrentAlert();
-  showToast('✅ ' + id.charAt(0).toUpperCase() + id.slice(1) + ' marked as taken!');
+  showToast('✅ ' + appState.medicines.find(m => m.id === id).name + ' marked as taken!');
 }
+
 function updateProgress() {
-  const pct = Math.round((takenCount / 3) * 100);
+  const total = appState.medicines.length;
+  const taken = Object.keys(appState.takenMeds).length;
+  const pct = total ? Math.round((taken / total) * 100) : 0;
+
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
-  const lbl = document.querySelector('.progress-label span');
-  lbl.textContent = takenCount + ' of 3 taken';
+  document.querySelector('.progress-label span').textContent = `${taken} of ${total} taken`;
 }
 
 // ── MAIN ALERT BANNER ──
@@ -632,46 +784,6 @@ function addAlert(newAlert) {
   renderCurrentAlert();
 }
 
-// ── MED DETAIL ──
-const medData = {
-  metformin: {
-    name: 'Metformin', dose: '500mg · Take with food',
-    color: '#E74C3C', shape: 'Oval, white tablet · NEW: Z shown on one side, 69 on the other',
-    emoji: '💊', bg: '#FDE8EC', image: 'drug_profiles/metformin.jpg',
-    steps: [
-      'Take 1 tablet (500mg)',
-      'Swallow with a full glass of water 💧',
-      'Take with your breakfast — this helps your stomach',
-      'Do NOT skip doses. If you forget, see the Missed Dose box below.'
-    ],
-    changed: true
-  },
-  lisinopril: {
-    name: 'Lisinopril', dose: '10mg · Once daily at lunch',
-    color: '#2ECC71', shape: 'Small, round, pink tablet, E3 shown on one side',
-    emoji: '💊', bg: '#E8F5EA', image: 'drug_profiles/lisinopril.jpeg',
-    steps: [
-      'Take 1 tablet (10mg)',
-      'Swallow with water 💧',
-      'Take at lunchtime — same time every day',
-      'You can take with or without food'
-    ],
-    changed: false
-  },
-  atorvastatin: {
-    name: 'Atorvastatin', dose: '20mg · Once daily at bedtime',
-    color: '#3498DB', shape: 'Oval, white, 11 shown on one side',
-    emoji: '💊', bg: '#EBF5FB', image: 'drug_profiles/atorvastatin.png',
-    steps: [
-      'Take 1 tablet (20mg)',
-      'Swallow with water 💧',
-      'Take at the same time each night before bed 🌙',
-      'Avoid grapefruit juice while on this medicine'
-    ],
-    changed: false
-  }
-};
-
 // ── MED Schedule ──
 const scheduleData = {
   metformin: { hour: 8, minute: 0 },
@@ -679,14 +791,28 @@ const scheduleData = {
   atorvastatin: { hour: 21, minute: 0 }
 };
 
+function parseTimeString(timeStr) {
+  const [time, modifier] = timeStr.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+
+  if (modifier === 'PM' && hours !== 12) hours += 12;
+  if (modifier === 'AM' && hours === 12) hours = 0;
+
+  return { hours, minutes };
+}
+
 function isMedMissed(id) {
   const btn = document.getElementById('check-' + id);
   if (!btn || btn.classList.contains('taken')) return false;
 
+  const reminder = appState.reminders.find(r => r.medId === id);
+  if (!reminder) return false;
+
   const now = new Date();
   const dueTime = new Date();
+  const parsed = parseTimeString(reminder.time);
 
-  dueTime.setHours(scheduleData[id].hour, scheduleData[id].minute, 0, 0);
+  dueTime.setHours(parsed.hours, parsed.minutes, 0, 0);
 
   return now > dueTime;
 }
@@ -700,7 +826,7 @@ function checkMissedDoses() {
         id: 'missed-' + id,
         type: 'warning',
         icon: '⏰',
-        title: medData[id].name + ' may have been missed',
+        title: appState.medicines.find(m => m.id === id).name + ' may have been missed',
         text: 'This dose looks overdue. Review the medication instructions or contact your care team if you are unsure what to do.'
       });
     }
@@ -709,24 +835,33 @@ function checkMissedDoses() {
 
 // ── MED DETAIL MODAL ──
 function openMedDetail(id) {
-  const m = medData[id];
+  const m = appState.medicines.find(m => m.id === id);
+  const reminder = appState.reminders.find(r => r.medId === id);
+  if (!m) return;
+
   let html = `
-    <div class="modal-pill-img" style="background:${m.bg}">${m.emoji}</div>
+    <div class="modal-pill-img" style="background:var(--gray-soft)">💊</div>
     <div class="modal-pill-name">${m.name}</div>
-    <div class="modal-pill-dose">${m.dose}</div>
+    <div class="modal-pill-dose">${reminder.dosage}</div>
   `;
+
   if (m.changed) {
-    html += `<div class="alert-banner warning" style="margin:14px 0">
-      <div class="alert-icon">⚠️</div>
-      <div>
-        <div class="alert-title">Appearance changed!</div>
-        <div class="alert-text">Your pharmacy switched to a generic brand. It is the same medicine — just looks a little different.</div>
+    html += `
+      <div class="alert-banner warning" style="margin:14px 0">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <div class="alert-title">Appearance changed!</div>
+          <div class="alert-text">
+            Your pharmacy switched to a generic brand. It is the same medicine — just looks a little different.
+          </div>
+        </div>
       </div>
-    </div>`;
+    `;
   }
+
   html += `
     <div class="pill-visual">
-      <div class="pill-swatch" style="background:${m.color}"></div>
+      <div class="pill-swatch" style="background:var(--gold-pale)"></div>
       <div class="pill-shape-info">
         <strong>How it looks</strong>
         ${m.shape}
@@ -741,14 +876,20 @@ function openMedDetail(id) {
       🖼️ View Pill Image
     </button>
 
-    <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark);margin:16px 0 8px">📋 How to take it</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark);margin:16px 0 8px">
+      📋 How to take it
+    </div>
   `;
+
   m.steps.forEach((s, i) => {
-    html += `<div class="instruction-step">
-      <div class="step-num">${i+1}</div>
-      <div class="step-text">${s}</div>
-    </div>`;
+    html += `
+      <div class="instruction-step">
+        <div class="step-num">${i + 1}</div>
+        <div class="step-text">${s}</div>
+      </div>
+    `;
   });
+
   html += `
     <div class="missed-box" style="margin-top:16px">
       <div class="missed-box-title">🔴 If you miss a dose</div>
@@ -761,9 +902,11 @@ function openMedDetail(id) {
       ❓ Ask My Doctor
     </button>
   `;
+
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('med-modal').classList.add('open');
 }
+
 function closeMedModal(e) {
   if (e.target === document.getElementById('med-modal')) {
     document.getElementById('med-modal').classList.remove('open');
@@ -781,9 +924,6 @@ function showPillImage(id) {
   document.getElementById('pill-image-content').innerHTML = `
     <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
       ${m.name}
-    </div>
-    <div style="font-size:14px;color:var(--text-medium);margin-bottom:16px;">
-      ${m.dose}
     </div>
     <img
       src="${m.image}"
@@ -822,10 +962,18 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ── CHECK MISSED DOSES ON LOAD ──
+function resetAppState() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+medData = buildMedData();
+renderTodayMedications();
+renderScheduleReminders();
+updateProgress();
 renderCurrentAlert();
 checkMissedDoses();
-setInterval(checkMissedDoses, 60000); // check every minute
+setInterval(checkMissedDoses, 60000);
 </script>
 </body>
 </html>
