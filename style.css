@@ -127,28 +127,7 @@
   }
 
   /* ── NAV TABS ── */
-  .nav-tabs {
-    display: flex;
-    background: var(--maroon-dark);
-    padding: 0 12px 0;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .nav-tab {
-    flex: 1;
-    padding: 10px 4px 12px;
-    text-align: center;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
-    cursor: pointer;
-    border: none;
-    background: none;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    letter-spacing: 0.3px;
-  }
+  
   .nav-tab.active {
     color: var(--gold-light);
     border-bottom-color: var(--gold);
