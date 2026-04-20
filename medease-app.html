@@ -108,7 +108,7 @@
     <!-- Today's Medications -->
     <div class="card">
       <div class="card-title">Today's Medications</div>
-      <div id="today-medications-list"></div>
+      <div class= "scroll-list" id="today-medications-list"></div>
     </div>
 
     <!-- Missed Dose Help -->
@@ -138,13 +138,106 @@
 
     <!-- Timeline -->
     <div class="card" style="padding:18px 14px">
-      <div id="schedule-reminders-list"></div>
+      <div class="scroll-list" id="schedule-reminders-list"></div>
     </div>
 
     <!-- Add Reminder -->
-    <button class="big-btn primary" onclick="showToast('🔔 Opening alarm settings...')">
+    <button class="big-btn primary" onclick="openAddReminderModal()">
       ➕ Add a New Reminder
     </button>
+
+    <!-- ══════════ ADD REMINDER MODAL ══════════ -->
+    <div class="modal-overlay" id="add-reminder-modal" onclick="closeAddReminderModal(event)">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+
+        <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
+          Add Reminder
+        </div>
+        <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
+          Create a simple medicine reminder.
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label for="reminder-medication" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Medication
+            </label>
+            <select id="reminder-medication" style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+            </select>
+          </div>
+
+          <div>
+            <label for="reminder-label" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Reminder title
+            </label>
+            <input id="reminder-label" type="text" placeholder="Example: Dinner time"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+          </div>
+
+          <div>
+            <label for="reminder-time" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Time
+            </label>
+            <div style="display:flex;gap:10px;">
+              <input id="reminder-time" type="text" placeholder="Example: 8:00"
+                style="flex:1;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+              <select id="reminder-ampm"
+                style="width:110px;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="reminder-dosage" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Dosage
+            </label>
+            <input id="reminder-dosage" type="text" placeholder="Example: 25mg"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+          </div>
+
+          <div>
+            <label for="reminder-type-enabled" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Enable reminder type
+            </label>
+            <select id="reminder-type-enabled"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+              <option value="Alarm set">On</option>
+              <option value="Off">Off</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="reminder-speaker" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Speaker reminder
+            </label>
+            <select id="reminder-speaker"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+              <option value="No speaker alarm">Off</option>
+              <option value="Smart speaker">On</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="reminder-small-note" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Small note
+            </label>
+            <input id="reminder-small-note" type="text" placeholder="Optional"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+          </div>
+        </div>
+
+        <button class="big-btn primary" style="margin-top:18px;" onclick="saveNewReminder()">
+          ➕ Save Reminder
+        </button>
+
+        <button class="big-btn primary" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
+          Cancel
+        </button>
+      </div>
+    </div>
 
     <div class="card" style="margin-top:14px">
       <div class="card-title">Weekly Overview</div>
@@ -557,32 +650,36 @@ function renderTodayMedications() {
 
   container.innerHTML = '';
 
-  appState.reminders.forEach((reminder, index) => {
+  const sortedReminders = [...appState.reminders].sort((a, b) => {
+    return reminderTimeToMinutes(a.time) - reminderTimeToMinutes(b.time);
+  });
+
+  sortedReminders.forEach((reminder, index) => {
     const med = appState.medicines.find(m => m.id === reminder.medId);
     if (!med) return;
 
-    const isTaken = !!appState.takenMeds[med.id];
+    const isTaken = !!appState.takenMeds[reminder.id];
     const bgColor = MED_BACKGROUND_COLORS[index % MED_BACKGROUND_COLORS.length];
     const alertBadge = med.changed
       ? `<div class="pill-badge" style="background:#C0392B;color:white">!</div>`
       : '';
 
     container.innerHTML += `
-      <div class="med-item" onclick="openMedDetail('${med.id}')">
+      <div class="med-item" onclick="openMedDetail('${med.id}', '${reminder.id}')">
         <div class="pill-icon" style="background:${bgColor}">
           ${MED_ICON}
           ${alertBadge}
         </div>
         <div class="med-info">
           <div class="med-name">${med.name}</div>
-          <div class="med-detail">${reminder.dosage} · ${reminder.smallNote}</div>
+          <div class="med-detail">${reminder.dosage || ''} · ${reminder.smallNote || ''}</div>
         </div>
         <div style="text-align:right">
           <div class="med-time">${reminder.time}</div>
           <button
             class="check-btn ${isTaken ? 'taken' : ''}"
-            id="check-${med.id}"
-            onclick="event.stopPropagation();takeMed('${med.id}')"
+            id="check-${reminder.id}"
+            onclick="event.stopPropagation();takeReminder('${reminder.id}')"
           >
             ${isTaken ? '✓' : '○'}
           </button>
@@ -592,6 +689,32 @@ function renderTodayMedications() {
   });
 }
 
+function removeMissedAlertForReminder(reminderId) {
+  alerts = alerts.filter(alert => alert.id !== 'missed-' + reminderId);
+}
+
+function takeReminder(reminderId) {
+  const btn = document.getElementById('check-' + reminderId);
+  if (!btn || btn.classList.contains('taken')) return;
+
+  const reminder = appState.reminders.find(r => r.id === reminderId);
+  if (!reminder) return;
+
+  const med = appState.medicines.find(m => m.id === reminder.medId);
+
+  appState.takenMeds[reminderId] = true;
+  saveState();
+
+  btn.classList.add('taken');
+  btn.textContent = '✓';
+
+  updateProgress();
+  removeMissedAlertForReminder(reminderId);
+  renderCurrentAlert();
+
+  showToast(`✅ ${med ? med.name : 'Medication'} marked as taken!`);
+}
+
 // -- Render schedule reminders on the Schedule screen
 function renderScheduleReminders() {
   const container = document.getElementById('schedule-reminders-list');
@@ -599,11 +722,15 @@ function renderScheduleReminders() {
 
   container.innerHTML = '';
 
-  appState.reminders.forEach((reminder, index) => {
+  const sortedReminders = [...appState.reminders].sort((a, b) => {
+    return reminderTimeToMinutes(a.time) - reminderTimeToMinutes(b.time);
+  });
+
+  sortedReminders.forEach((reminder, index) => {
     const med = appState.medicines.find(m => m.id === reminder.medId);
     if (!med) return;
 
-    const connector = index < appState.reminders.length - 1
+    const connector = index < sortedReminders.length - 1
       ? `<div class="time-connector"></div>`
       : '';
 
@@ -625,10 +752,10 @@ function renderScheduleReminders() {
             ${reminder.label}
           </div>
           <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
-            Take <strong>${med.name}</strong>
+            Take <strong>${med.name} ${reminder.dosage || ''}</strong>
           </div>
           <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
-            ${reminder.smallNote}
+            ${reminder.smallNote || ''}
           </div>
           <div class="reminder-row" style="margin-top:8px">
             <div class="reminder-chip">🔔 ${reminder.reminderType}</div>
@@ -680,8 +807,8 @@ function takeMed(id) {
 }
 
 function updateProgress() {
-  const total = appState.medicines.length;
-  const taken = Object.keys(appState.takenMeds).length;
+  const total = appState.reminders.length;
+  const taken = appState.reminders.filter(r => appState.takenMeds[r.id]).length;
   const pct = total ? Math.round((taken / total) * 100) : 0;
 
   document.getElementById('progress-bar').style.width = pct + '%';
@@ -817,32 +944,51 @@ function isMedMissed(id) {
   return now > dueTime;
 }
 
-function checkMissedDoses() {
-  const medIds = ['metformin', 'lisinopril', 'atorvastatin'];
+function isReminderMissed(reminderId) {
+  const btn = document.getElementById('check-' + reminderId);
+  if (!btn || btn.classList.contains('taken')) return false;
 
-  medIds.forEach(id => {
-    if (isMedMissed(id) && !missedDoseAlertsShown[id]) {
+  const reminder = appState.reminders.find(r => r.id === reminderId);
+  if (!reminder) return false;
+
+  const now = new Date();
+  const dueTime = new Date();
+  const parsed = parseTimeString(reminder.time);
+
+  dueTime.setHours(parsed.hours, parsed.minutes, 0, 0);
+
+  return now > dueTime;
+}
+
+function checkMissedDoses() {
+  appState.reminders.forEach(reminder => {
+    if (isReminderMissed(reminder.id) && !missedDoseAlertsShown[reminder.id]) {
+      const med = appState.medicines.find(m => m.id === reminder.medId);
+      if (!med) return;
+
       addAlert({
-        id: 'missed-' + id,
+        id: 'missed-' + reminder.id,
         type: 'warning',
         icon: '⏰',
-        title: appState.medicines.find(m => m.id === id).name + ' may have been missed',
-        text: 'This dose looks overdue. Review the medication instructions or contact your care team if you are unsure what to do.'
+        title: `${med.name} may have been missed`,
+        text: `The ${reminder.time} reminder looks overdue. Review the medication instructions or contact your care team if you are unsure what to do.`
       });
     }
   });
 }
 
 // ── MED DETAIL MODAL ──
-function openMedDetail(id) {
+function openMedDetail(id, reminderId) {
   const m = appState.medicines.find(m => m.id === id);
-  const reminder = appState.reminders.find(r => r.medId === id);
+  const reminder = reminderId
+    ? appState.reminders.find(r => r.id === reminderId)
+    : null;
   if (!m) return;
 
   let html = `
     <div class="modal-pill-img" style="background:var(--gray-soft)">💊</div>
     <div class="modal-pill-name">${m.name}</div>
-    <div class="modal-pill-dose">${reminder.dosage}</div>
+    <div class="modal-pill-dose">${reminder?.dosage || ''}</div>
   `;
 
   if (m.changed) {
@@ -942,6 +1088,112 @@ function closePillImageModal(event) {
   if (event.target === document.getElementById('pill-image-modal')) {
     document.getElementById('pill-image-modal').classList.remove('open');
   }
+}
+
+// ── ADD REMINDER MODAL
+function openAddReminderModal() {
+  populateMedicationDropdown();
+  clearAddReminderForm();
+  document.getElementById('add-reminder-modal').classList.add('open');
+}
+
+function closeAddReminderModal(event) {
+  if (event.target === document.getElementById('add-reminder-modal')) {
+    document.getElementById('add-reminder-modal').classList.remove('open');
+  }
+}
+
+function closeAddReminderModalDirect() {
+  document.getElementById('add-reminder-modal').classList.remove('open');
+}
+
+function populateMedicationDropdown() {
+  const select = document.getElementById('reminder-medication');
+  if (!select) return;
+
+  select.innerHTML = '';
+
+  appState.medicines.forEach(med => {
+    const option = document.createElement('option');
+    option.value = med.id;
+    option.textContent = med.name;
+    select.appendChild(option);
+  });
+}
+
+function clearAddReminderForm() {
+  document.getElementById('reminder-label').value = '';
+  document.getElementById('reminder-time').value = '';
+  document.getElementById('reminder-ampm').value = 'AM';
+  document.getElementById('reminder-dosage').value = '';
+  document.getElementById('reminder-type-enabled').value = 'Alarm set';
+  document.getElementById('reminder-speaker').value = 'No speaker alarm';
+  document.getElementById('reminder-small-note').value = '';
+}
+
+function isValidTimeInput(timeStr) {
+  return /^(1[0-2]|[1-9]):[0-5][0-9]$/.test(timeStr.trim());
+}
+
+function saveNewReminder() {
+  const medId = document.getElementById('reminder-medication').value;
+  const label = document.getElementById('reminder-label').value.trim();
+  const time = document.getElementById('reminder-time').value.trim();
+  const ampm = document.getElementById('reminder-ampm').value;
+  const dosage = document.getElementById('reminder-dosage').value.trim();
+  const reminderType = document.getElementById('reminder-type-enabled').value;
+  const speaker = document.getElementById('reminder-speaker').value;
+  const smallNote = document.getElementById('reminder-small-note').value.trim();
+
+  if (!medId) {
+    showToast('Please choose a medication.');
+    return;
+  }
+
+  if (!label) {
+    showToast('Please enter a reminder title.');
+    return;
+  }
+
+  if (!isValidTimeInput(time)) {
+    showToast('Please enter time like 8:00.');
+    return;
+  }
+
+  if (!dosage) {
+    showToast('Please enter a dosage.');
+    return;
+  }
+
+  const fullTime = `${time} ${ampm}`;
+  const reminderId = `${medId}-reminder-${Date.now()}`;
+
+  const newReminder = {
+    id: reminderId,
+    medId,
+    label,
+    time: fullTime,
+    dosage,
+    reminderType,
+    speaker,
+    smallNote: smallNote || ''
+  };
+
+  appState.reminders.push(newReminder);
+  saveState();
+
+  renderTodayMedications();
+  renderScheduleReminders();
+  updateProgress();
+  checkMissedDoses();
+
+  closeAddReminderModalDirect();
+  showToast('✅ New reminder added!');
+}
+
+function reminderTimeToMinutes(timeStr) {
+  const { hours, minutes } = parseTimeString(timeStr);
+  return (hours * 60) + minutes;
 }
 
 // ── REFILL ──
