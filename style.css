@@ -126,14 +126,6 @@
     flex-shrink: 0;
   }
 
-  /* ── NAV TABS ── */
-  
-  .nav-tab.active {
-    color: var(--gold-light);
-    border-bottom-color: var(--gold);
-  }
-  .nav-tab .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
-
   /* ── SCREENS ── */
   .screen { display: none; flex: 1; overflow-y: auto; padding: 20px 18px 100px; }
   .screen.active { display: block; }
@@ -167,13 +159,12 @@
   .bnav-btn .bnav-icon { font-size: 22px; }
   .bnav-btn .bnav-label {
     font-family: 'Nunito', sans-serif;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--gray-mid);
+    color: var(--maroon-dark);
     letter-spacing: 0.3px;
   }
-  .bnav-btn.active .bnav-label { color: var(--maroon); }
-  .bnav-btn.active { background: rgba(107,16,32,0.06); }
+  .bnav-btn.active { border: 2px solid; border-color: var(--maroon-light); }
 
   /* ── CARDS ── */
   .card {
@@ -187,7 +178,7 @@
     font-family: 'Nunito', sans-serif;
     font-size: 13px;
     font-weight: 800;
-    color: var(--gray-mid);
+    color: var(--maroon-dark);
     text-transform: uppercase;
     letter-spacing: 0.8px;
     margin-bottom: 14px;
@@ -237,7 +228,7 @@
     font-family: 'Nunito', sans-serif;
     font-size: 12px;
     font-weight: 700;
-    color: var(--gray-mid);
+    color: var(--maroon);
     text-align: right;
   }
   .check-btn {
@@ -277,7 +268,7 @@
     font-size: 12px;
     font-family: 'Nunito', sans-serif;
     font-weight: 700;
-    color: var(--gray-mid);
+    color: var(--maroon-dark);
     margin-bottom: 6px;
   }
 
@@ -413,10 +404,9 @@
     padding: 5px 12px;
     border-radius: 99px;
     letter-spacing: 0.3px;
+    background: var(--gray-soft);
+    color: var(--maroon-dark)
   }
-  .rx-status.ready { background: var(--green-light); color: var(--green); }
-  .rx-status.pending { background: var(--orange-light); color: var(--orange); }
-  .rx-status.partial { background: var(--blue-light); color: var(--blue); }
   .rx-status .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
   .rx-bottom {
     display: flex;
@@ -594,7 +584,7 @@
     font-family: 'Nunito', sans-serif;
     font-size: 13px;
     font-weight: 800;
-    color: var(--gray-mid);
+    color: var(--maroon-dark);
     width: 72px;
     padding-top: 14px;
     flex-shrink: 0;
@@ -697,7 +687,7 @@
   }
   .reminder-chip.inactive {
     background: var(--gray-soft);
-    color: var(--gray-mid);
+    color: var(--maroon-dark);
   }
   .scroll-list {
     max-height: 200px;
