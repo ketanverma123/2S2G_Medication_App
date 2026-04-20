@@ -175,33 +175,70 @@
           </div>
 
           <div>
-            <label for="reminder-dosage" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-dosage-amount" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Dosage
             </label>
-            <input id="reminder-dosage" type="text" placeholder="Example: 25mg"
-              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+            <div style="display:flex;gap:10px;">
+              <input
+                id="reminder-dosage-amount"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Example: 2"
+                style="flex:1;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
+              >
+              <select
+                id="reminder-dosage-unit"
+                style="width:120px;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
+              >
+                <option value="mg">mg</option>
+                <option value="pill(s)">pill(s)</option>
+              </select>
+            </div>
           </div>
 
           <div>
-            <label for="reminder-type-enabled" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
-              Enable reminder type
+            <label for="reminder-type" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Set Reminder Type
             </label>
-            <select id="reminder-type-enabled"
-              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
-              <option value="Alarm set">On</option>
-              <option value="Off">Off</option>
+
+            <select
+              id="reminder-type"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
+            >
+              <option value="Alarm Set">Alarm</option>
+              <option value="Push Notification Set">Push Notification</option>
+              <option value="Notifications On">Phone Notification</option>
+              <option value="Send Email">Email</option>
+              <option value="Caregiver Alert">Caregiver Alert</option>
             </select>
           </div>
 
           <div>
-            <label for="reminder-speaker" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
-              Speaker reminder
+            <label style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Speaker Sound
             </label>
-            <select id="reminder-speaker"
-              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
-              <option value="No speaker alarm">Off</option>
-              <option value="Smart speaker">On</option>
-            </select>
+
+            <div class="toggle-group" id="reminder-speaker-toggle">
+              <button
+                type="button"
+                class="toggle-btn active"
+                data-value="On"
+                onclick="setToggleValue('reminder-speaker', 'On', this)"
+              >
+                On
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                data-value="Off"
+                onclick="setToggleValue('reminder-speaker', 'Off', this)"
+              >
+                Off
+              </button>
+            </div>
+
+            <input type="hidden" id="reminder-speaker" value="On">
           </div>
 
           <div>
@@ -211,13 +248,30 @@
             <input id="reminder-small-note" type="text" placeholder="Optional"
               style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
           </div>
+
+          <div>
+            <label style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+              Steps
+            </label>
+
+            <div id="reminder-steps-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+            <button
+              type="button"
+              class="medium-btn ghost"
+              style="margin-top:10px;"
+              onclick="addReminderStepRow()"
+            >
+              ➕ Add Step
+            </button>
+          </div>
         </div>
 
         <button class="big-btn primary" style="margin-top:18px;" onclick="saveNewReminder()">
           ➕ Save Reminder
         </button>
 
-        <button class="big-btn primary" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
+        <button class="big-btn secondary" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
           Cancel
         </button>
       </div>
@@ -487,6 +541,7 @@ const REMINDER_DOT_COLORS = [
   'var(--blue)',
   'var(--orange)'
 ];
+// DEFAULT APP STATE
 const defaultAppState = {
   takenMeds: {},
   dismissedAlerts: [],
@@ -496,12 +551,6 @@ const defaultAppState = {
       name: 'Metformin',
       shape: 'Oval, white tablet · NEW: Z shown on one side, 69 on the other',
       image: 'drug_profiles/metformin.jpg',
-      steps: [
-        'Take 1 tablet (500mg)',
-        'Swallow with a full glass of water 💧',
-        'Take with your breakfast — this helps your stomach',
-        'Do NOT skip doses. If you forget, see the Missed Dose box below.'
-      ],
       changed: true
     },
     {
@@ -509,12 +558,6 @@ const defaultAppState = {
       name: 'Lisinopril',
       shape: 'Small, round, pink tablet, E3 shown on one side',
       image: 'drug_profiles/lisinopril.jpeg',
-      steps: [
-        'Take 1 tablet (10mg)',
-        'Swallow with water 💧',
-        'Take at lunchtime — same time every day',
-        'You can take with or without food'
-      ],
       changed: false
     },
     {
@@ -522,12 +565,6 @@ const defaultAppState = {
       name: 'Atorvastatin',
       shape: 'Oval, white, 11 shown on one side',
       image: 'drug_profiles/atorvastatin.png',
-      steps: [
-        'Take 1 tablet (20mg)',
-        'Swallow with water 💧',
-        'Take at the same time each night before bed 🌙',
-        'Avoid grapefruit juice while on this medicine'
-      ],
       changed: false
     }
   ],
@@ -538,9 +575,15 @@ const defaultAppState = {
       label: 'Breakfast time',
       time: '8:00 AM',
       dosage: '500mg',
-      reminderType: 'Alarm set',
+      reminderType: 'Alarm Set',
       speaker: 'No speaker alarm',
-      smallNote: 'With breakfast 🍳'
+      smallNote: 'With breakfast 🍳',
+      steps: [
+        'Take 1 tablet (500mg)',
+        'Swallow with a full glass of water 💧',
+        'Take with your breakfast — this helps your stomach',
+        'Do NOT skip doses. If you forget, see the Missed Dose box below.'
+      ]
     },
     {
       id: 'lisinopril-reminder',
@@ -548,9 +591,15 @@ const defaultAppState = {
       label: 'Lunchtime',
       time: '12:00 PM',
       dosage: '10mg',
-      reminderType: 'Alarm set',
+      reminderType: 'Alarm Set',
       speaker: 'Smart speaker',
-      smallNote: 'With lunch 🥗'
+      smallNote: 'With lunch 🥗',
+      steps: [
+        'Take 1 tablet (10mg)',
+        'Swallow with water 💧',
+        'Take at lunchtime — same time every day',
+        'You can take with or without food'
+      ],
     },
     {
       id: 'atorvastatin-reminder',
@@ -558,9 +607,15 @@ const defaultAppState = {
       label: 'Bedtime routine',
       time: '9:00 PM',
       dosage: '20mg',
-      reminderType: 'Alarm set',
+      reminderType: 'Alarm Set',
       speaker: 'No speaker alarm',
-      smallNote: 'Before bed 🌙'
+      smallNote: 'Before bed 🌙',
+      steps: [
+        'Take 1 tablet (20mg)',
+        'Swallow with water 💧',
+        'Take at the same time each night before bed 🌙',
+        'Avoid grapefruit juice while on this medicine'
+      ],
     }
   ]
 };
@@ -596,7 +651,6 @@ function buildMedData() {
     data[med.id] = {
       name: med.name,
       shape: med.shape,
-      steps: med.steps,
       image: med.image,
       changed: med.changed
     };
@@ -722,7 +776,9 @@ function renderScheduleReminders() {
             ${reminder.smallNote || ''}
           </div>
           <div class="reminder-row" style="margin-top:8px">
-            <div class="reminder-chip">🔔 ${reminder.reminderType}</div>
+            <div class="reminder-chip">
+              ${getReminderIcon(reminder.reminderType)} ${reminder.reminderType}
+            </div>
             ${speakerChip}
           </div>
         </div>
@@ -971,7 +1027,6 @@ function openMedDetail(id, reminderId) {
 
   html += `
     <div class="pill-visual">
-      <div class="pill-swatch" style="background:var(--gold-pale)"></div>
       <div class="pill-shape-info">
         <strong>How it looks</strong>
         ${m.shape}
@@ -991,7 +1046,7 @@ function openMedDetail(id, reminderId) {
     </div>
   `;
 
-  m.steps.forEach((s, i) => {
+  (reminder?.steps || []).forEach((s, i) => {
     html += `
       <div class="instruction-step">
         <div class="step-num">${i + 1}</div>
@@ -1089,25 +1144,150 @@ function clearAddReminderForm() {
   document.getElementById('reminder-label').value = '';
   document.getElementById('reminder-time').value = '';
   document.getElementById('reminder-ampm').value = 'AM';
-  document.getElementById('reminder-dosage').value = '';
-  document.getElementById('reminder-type-enabled').value = 'Alarm set';
-  document.getElementById('reminder-speaker').value = 'No speaker alarm';
+  document.getElementById('reminder-dosage-amount').value = '';
+  document.getElementById('reminder-dosage-unit').value = 'mg';
+  document.getElementById('reminder-type').value = 'Alarm Set';
+  document.getElementById('reminder-speaker').value = 'On';
   document.getElementById('reminder-small-note').value = '';
+
+  document.querySelectorAll('#reminder-speaker-toggle .toggle-btn').forEach((btn, index) => {
+    btn.classList.toggle('active', index === 0);
+  });
+
+  const stepsContainer = document.getElementById('reminder-steps-list');
+  if (stepsContainer) {
+    stepsContainer.innerHTML = '';
+    addReminderStepRow();
+  }
 }
 
 function isValidTimeInput(timeStr) {
   return /^(1[0-2]|[1-9]):[0-5][0-9]$/.test(timeStr.trim());
 }
 
+function setToggleValue(inputId, value, clickedBtn) {
+  const hiddenInput = document.getElementById(inputId);
+  if (hiddenInput) {
+    hiddenInput.value = value;
+  }
+
+  const group = clickedBtn.parentElement;
+  if (!group) return;
+
+  group.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  clickedBtn.classList.add('active');
+}
+
+// -- DYNAMIC REMINDER STEPS --
+function addReminderStepRow(value = '') {
+  const container = document.getElementById('reminder-steps-list');
+  if (!container) return;
+
+  const stepNumber = container.children.length + 1;
+  const row = document.createElement('div');
+
+  row.className = 'reminder-step-row';
+  row.style.display = 'flex';
+  row.style.alignItems = 'center';
+  row.style.gap = '10px';
+
+  row.innerHTML = `
+    <div
+      style="
+        min-width:32px;
+        height:32px;
+        border-radius:50%;
+        background:var(--maroon);
+        color:white;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-family:'Nunito',sans-serif;
+        font-weight:800;
+        font-size:14px;
+        flex-shrink:0;
+      "
+    >
+      ${stepNumber}
+    </div>
+
+    <input
+      type="text"
+      class="reminder-step-input"
+      placeholder="Enter step ${stepNumber}"
+      value="${value.replace(/"/g, '&quot;')}"
+      style="
+        flex:1;
+        padding:14px;
+        border-radius:12px;
+        border:1px solid #D8D1CA;
+        font-size:15px;
+      "
+    >
+
+    <button
+      type="button"
+      onclick="removeReminderStepRow(this)"
+      aria-label="Remove step ${stepNumber}"
+      style="
+        border:none;
+        background:#FDECEA;
+        color:#C0392B;
+        border-radius:10px;
+        padding:10px 12px;
+        cursor:pointer;
+        font-weight:800;
+      "
+    >
+      ✕
+    </button>
+  `;
+
+  container.appendChild(row);
+  renumberReminderStepRows();
+}
+
+function removeReminderStepRow(buttonEl) {
+  const row = buttonEl.closest('.reminder-step-row');
+  if (!row) return;
+
+  row.remove();
+  renumberReminderStepRows();
+}
+
+function renumberReminderStepRows() {
+  const rows = document.querySelectorAll('#reminder-steps-list .reminder-step-row');
+
+  rows.forEach((row, index) => {
+    const stepNumber = index + 1;
+    const badge = row.children[0];
+    const input = row.querySelector('.reminder-step-input');
+    const removeBtn = row.querySelector('button');
+
+    badge.textContent = stepNumber;
+    input.placeholder = `Enter step ${stepNumber}`;
+    removeBtn.setAttribute('aria-label', `Remove step ${stepNumber}`);
+  });
+}
+
+// -- SAVE NEW REMINDER
 function saveNewReminder() {
   const medId = document.getElementById('reminder-medication').value;
   const label = document.getElementById('reminder-label').value.trim();
   const time = document.getElementById('reminder-time').value.trim();
   const ampm = document.getElementById('reminder-ampm').value;
-  const dosage = document.getElementById('reminder-dosage').value.trim();
-  const reminderType = document.getElementById('reminder-type-enabled').value;
-  const speaker = document.getElementById('reminder-speaker').value;
+  const dosageAmount = document.getElementById('reminder-dosage-amount').value.trim();
+  const dosageUnit = document.getElementById('reminder-dosage-unit').value;
+  const reminderType = document.getElementById('reminder-type').value;
+  const speakerToggle = document.getElementById('reminder-speaker').value;
   const smallNote = document.getElementById('reminder-small-note').value.trim();
+  const stepInputs = document.querySelectorAll('.reminder-step-input');
+  const steps = Array.from(stepInputs)
+    .map(input => input.value.trim())
+    .filter(step => step !== '');
 
   if (!medId) {
     showToast('Please choose a medication.');
@@ -1124,13 +1304,20 @@ function saveNewReminder() {
     return;
   }
 
-  if (!dosage) {
+  if (!dosageAmount || !dosageUnit) {
     showToast('Please enter a dosage.');
+    return;
+  }
+
+  if (!steps.length) {
+    showToast('Please add at least one step.');
     return;
   }
 
   const fullTime = `${time} ${ampm}`;
   const reminderId = `${medId}-reminder-${Date.now()}`;
+  const dosage = `${dosageAmount} ${dosageUnit}`;
+  const speaker = speakerToggle === 'On' ? 'Smart speaker' : 'Smart speaker off';
 
   const newReminder = {
     id: reminderId,
@@ -1140,7 +1327,8 @@ function saveNewReminder() {
     dosage,
     reminderType,
     speaker,
-    smallNote: smallNote || ''
+    smallNote: smallNote || '',
+    steps
   };
 
   appState.reminders.push(newReminder);
@@ -1176,6 +1364,16 @@ function showToast(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function getReminderIcon(type) {
+  switch(type) {
+    case 'Alarm Set': return '⏰';
+    case 'Push Notification Set': return '📱';
+    case 'Send Email': return '✉️';
+    case 'Caregiver Alert': return '👥';
+    default: return '🔔';
+  }
 }
 
 function resetAppState() {
