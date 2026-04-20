@@ -1,0 +1,704 @@
+  :root {
+    --maroon: #6B1020;
+    --maroon-light: #8B1A2E;
+    --maroon-dark: #4A0B16;
+    --gold: #C9A227;
+    --gold-light: #E8C547;
+    --gold-pale: #FFF8E7;
+    --cream: #FAF6F0;
+    --white: #FFFFFF;
+    --gray-soft: #F2EDE8;
+    --gray-mid: #8C7B6E;
+    --text-dark: #2C1A0E;
+    --text-medium: #5C4033;
+    --green: #2D7A3A;
+    --green-light: #E8F5EA;
+    --red: #C0392B;
+    --red-light: #FDECEA;
+    --blue: #1A5276;
+    --blue-light: #EBF5FB;
+    --orange: #D35400;
+    --orange-light: #FEF0E7;
+    --radius: 20px;
+    --radius-sm: 12px;
+    --shadow: 0 4px 20px rgba(107,16,32,0.12);
+    --shadow-lg: 0 8px 40px rgba(107,16,32,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── PHONE SHELL ── */
+  .phone {
+    width: 390px;
+    min-height: 844px;
+    background: var(--cream);
+    border-radius: 48px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25), 0 0 0 10px #1a1a1a, 0 0 0 12px #333;
+    margin: 32px auto;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    background: var(--maroon);
+    padding: 12px 28px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--gold-light);
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .status-bar .notch {
+    width: 110px; height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 16px 16px;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+    padding: 18px 24px 20px;
+    flex-shrink: 0;
+  }
+  .app-header .greeting {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .app-header .name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--white);
+    margin-top: 2px;
+  }
+  .app-header .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold);
+    color: var(--maroon-dark);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  .app-header .badge .dot {
+    width: 7px; height: 7px;
+    background: var(--maroon-dark);
+    border-radius: 50%;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--maroon-dark);
+    flex-shrink: 0;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    background: var(--maroon-dark);
+    padding: 0 12px 0;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 10px 4px 12px;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-tab.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+  }
+  .nav-tab .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex: 1; overflow-y: auto; padding: 20px 18px 100px; }
+  .screen.active { display: block; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: var(--white);
+    border-top: 1px solid rgba(107,16,32,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    z-index: 10;
+  }
+  .bnav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+  }
+  .bnav-btn .bnav-icon { font-size: 22px; }
+  .bnav-btn .bnav-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gray-mid);
+    letter-spacing: 0.3px;
+  }
+  .bnav-btn.active .bnav-label { color: var(--maroon); }
+  .bnav-btn.active { background: rgba(107,16,32,0.06); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  /* ── TODAY'S MEDS ── */
+  .med-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-soft);
+    cursor: pointer;
+  }
+  .med-item:last-child { border-bottom: none; }
+  .pill-icon {
+    width: 54px; height: 54px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .pill-icon .pill-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    border: 2px solid var(--white);
+  }
+  .med-info { flex: 1; }
+  .med-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .med-detail {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin-top: 2px;
+  }
+  .med-time {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-mid);
+    text-align: right;
+  }
+  .check-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 2.5px solid #DDD;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .check-btn.taken {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--gray-soft);
+    border-radius: 99px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--maroon), var(--gold));
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    color: var(--gray-mid);
+    margin-bottom: 6px;
+  }
+
+  /* ── ALERT BANNER ── */
+  .alert-banner {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .alert-banner.warning { background: var(--orange-light); border-left: 4px solid var(--orange); }
+  .alert-banner.info { background: var(--blue-light); border-left: 4px solid var(--blue); }
+  .alert-banner.success { background: var(--green-light); border-left: 4px solid var(--green); }
+  .alert-banner .alert-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .alert-banner .alert-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .alert-banner .alert-text {
+    font-size: 13px;
+    color: var(--text-medium);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  /* ── BIG BUTTON ── */
+  .big-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .big-btn:active { transform: scale(0.97); }
+  .big-btn.primary {
+    background: var(--maroon);
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(107,16,32,0.3);
+  }
+  .big-btn.secondary {
+    background: var(--gold);
+    color: var(--maroon-dark);
+    box-shadow: 0 4px 16px rgba(201,162,39,0.3);
+  }
+  .big-btn.ghost {
+    background: var(--gray-soft);
+    color: var(--text-medium);
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-dark);
+    margin: 20px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── PHARMACY ── */
+  .rx-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rx-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .rx-icon {
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .rx-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+  }
+  .rx-sub {
+    font-size: 13px;
+    color: var(--text-medium);
+  }
+  .rx-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 99px;
+    letter-spacing: 0.3px;
+  }
+  .rx-status.ready { background: var(--green-light); color: var(--green); }
+  .rx-status.pending { background: var(--orange-light); color: var(--orange); }
+  .rx-status.partial { background: var(--blue-light); color: var(--blue); }
+  .rx-status .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .rx-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .refill-btn {
+    padding: 10px 20px;
+    border-radius: 99px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .refill-btn:active { transform: scale(0.96); }
+  .refill-btn.tap-refill { background: var(--maroon); color: var(--white); }
+  .refill-btn.schedule { background: var(--gold-pale); color: var(--maroon); }
+
+  /* ── PILL DETAIL MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(44,26,14,0.55);
+    z-index: 20;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet {
+    background: var(--white);
+    border-radius: 28px 28px 0 0;
+    padding: 24px 24px 40px;
+    width: 100%;
+    max-height: 85%;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--gray-soft);
+    border-radius: 99px;
+    margin: 0 auto 20px;
+  }
+  .modal-pill-img {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px;
+  }
+  .modal-pill-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-dark);
+    text-align: center;
+  }
+  .modal-pill-dose {
+    font-size: 15px;
+    color: var(--text-medium);
+    text-align: center;
+    margin-top: 4px;
+  }
+  .instruction-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-soft);
+  }
+  .instruction-step:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--maroon);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text {
+    font-size: 15px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    padding-top: 5px;
+  }
+
+  /* ── PILL VISUAL ── */
+  .pill-visual {
+    display: flex;
+    gap: 10px;
+    background: var(--gray-soft);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 14px 0;
+    align-items: center;
+  }
+  .pill-swatch {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    flex-shrink: 0;
+  }
+  .pill-shape-info {
+    font-size: 13px;
+    color: var(--text-medium);
+  }
+  .pill-shape-info strong {
+    display: block;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+  }
+
+  /* ── MISSED DOSE SECTION ── */
+  .missed-box {
+    background: var(--red-light);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin: 10px 0;
+    border: 1.5px solid #F5C6C6;
+  }
+  .missed-box-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .missed-box p {
+    font-size: 13px;
+    color: var(--text-medium);
+    line-height: 1.5;
+  }
+
+  /* ── CAREGIVER SECTION ── */
+  .caregiver-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold-pale);
+    border: 1.5px solid var(--gold);
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--maroon-dark);
+    margin: 4px;
+    cursor: pointer;
+  }
+
+  /* ── SCHEDULE SCREEN ── */
+  .time-block {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .time-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gray-mid);
+    width: 72px;
+    padding-top: 14px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .time-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .time-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    margin-top: 16px;
+    flex-shrink: 0;
+  }
+  .time-connector {
+    flex: 1;
+    width: 2px;
+    background: var(--gray-soft);
+    margin: 4px 0;
+  }
+  .time-content { flex: 1; }
+
+  /* ── SCROLLBAR ── */
+  .screen::-webkit-scrollbar { width: 4px; }
+  .screen::-webkit-scrollbar-track { background: transparent; }
+  .screen::-webkit-scrollbar-thumb { background: var(--gray-soft); border-radius: 99px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: absolute;
+    top: 130px;
+    left: 20px; right: 20px;
+    background: var(--text-dark);
+    color: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── REFILL SUCCESS ── */
+  .success-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(45,122,58,0.92);
+    z-index: 25;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 40px;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .success-overlay.open { display: flex; }
+  .success-icon { font-size: 72px; }
+  .success-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+  }
+  .success-sub { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+
+  /* ── REMINDER CHIPS ── */
+  .reminder-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .reminder-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--maroon);
+    color: white;
+    border-radius: 99px;
+    padding: 7px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .reminder-chip.inactive {
+    background: var(--gray-soft);
+    color: var(--gray-mid);
+  }
