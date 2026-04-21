@@ -97,14 +97,47 @@
 
     <!-- Missed Dose Help -->
     <div class="card">
-      <div class="card-title">Missed a Dose?</div>
-      <div class="missed-box">
-        <div class="missed-box-title">🔴 What to do if you forget</div>
-        <p>Take it as soon as you remember. If it's almost time for your next dose, skip the missed one. <strong>Never take two doses at once.</strong></p>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
+
+        <button
+          type="button"
+          id="missed-dose-toggle-btn"
+          class="missed-toggle-btn"
+          onclick="toggleMissedDoseBox()"
+          aria-expanded="false"
+          aria-controls="missed-dose-content"
+          style="
+            background:none;
+            border:none;
+            cursor:pointer;
+            font-size:20px;
+            font-weight:900;
+            color:var(--text-dark);
+            line-height:1;
+          "
+        >
+          ▾
+        </button>
       </div>
-      <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📱 Sending message to your care team...')">
-        📞 Ask My Care Team
-      </button>
+
+      <div id="missed-dose-content" style="display:none; margin-top:10px;">
+        <div class="missed-box">
+          <div class="missed-box-title">🔴 What to do if you forget</div>
+          <p style="margin:0;">
+            Take it as soon as you remember. If it's almost time for your next dose, skip the missed one.
+            <strong>Never take two doses at once.</strong>
+          </p>
+        </div>
+
+        <button
+          class="big-btn ghost"
+          style="margin-top:10px"
+          onclick="showToast('📱 Sending message to your care team...')"
+        >
+          📞 Ask My Care Team
+        </button>
+      </div>
     </div>
 
   </div><!-- end home -->
@@ -279,36 +312,10 @@
 
     <div class="card" style="margin-top:14px">
       <div class="card-title">Weekly Overview</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center">
-        <div v-for="d in days">
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">M</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">T</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">W</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Th</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#F5C6C6;display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✗</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">F</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Sa</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Su</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">→</div>
-        </div>
-      </div>
+      <div
+        id="weekly-overview-grid"
+        style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center"
+      ></div>
     </div>
   </div><!-- end schedule -->
 
@@ -509,6 +516,16 @@
     </button>
   </div>
 
+  <!-- ══════════ Med Taken Success ══════════ -->
+  <div class="success-overlay" id="med-taken-success">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Medication Taken!</div>
+    <div class="success-sub">Great job! You've successfully taken your medication for today.</div>
+    <button class="big-btn" style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)" onclick="closeMedTakenSuccess()">
+      Got it 👍
+    </button>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast">
     <span id="toast-text">Done!</span>
@@ -545,6 +562,15 @@ const REMINDER_DOT_COLORS = [
 const defaultAppState = {
   takenMeds: {},
   dismissedAlerts: [],
+  weekOverview: {
+    M: null,
+    T: null,
+    W: null,
+    Th: null,
+    F: null,
+    Sa: null,
+    Su: null
+  },
   medicines: [
     {
       id: 'metformin',
@@ -834,6 +860,15 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
   document.querySelector('.progress-label span').textContent = `${taken} of ${total} taken`;
+
+  if (pct === 100) {
+    setTimeout(() => {
+      showMedTakenSuccess();
+    }, 500);
+  }
+
+  updateWeekOverviewForToday();
+  renderWeekOverview();
 }
 
 // ── MAIN ALERT BANNER ──
@@ -1056,20 +1091,66 @@ function openMedDetail(id, reminderId) {
   });
 
   html += `
-    <div class="missed-box" style="margin-top:16px">
-      <div class="missed-box-title">🔴 If you miss a dose</div>
-      <p>Take it as soon as you remember. If your next dose is in less than 2 hours, skip the missed one. Never double up.</p>
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
+
+      <button
+        type="button"
+        id="missed-dose-toggle-btn"
+        class="missed-toggle-btn"
+        onclick="toggleMissedDoseBox()"
+        aria-expanded="false"
+        aria-controls="missed-dose-content"
+        style="
+          background:none;
+          border:none;
+          cursor:pointer;
+          font-size:20px;
+          font-weight:900;
+          color:var(--text-dark);
+          line-height:1;
+        "
+      >
+        ▾
+      </button>
     </div>
-    <button class="big-btn primary" style="margin-top:16px" onclick="closeMedModalDirect();takeMed('${id}')">
-      ✅ Mark as Taken
-    </button>
-    <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📞 Sending message to Dr. Martinez...');closeMedModalDirect()">
-      ❓ Ask My Doctor
-    </button>
-  `;
+
+    <div id="missed-dose-content" style="display:none; margin-top:10px;">
+      <div class="missed-box">
+        <div class="missed-box-title">🔴 What to do if you forget</div>
+        <p style="margin:0;">
+          Take it as soon as you remember. If it's almost time for your next dose, skip the missed one.
+          <strong>Never take two doses at once.</strong>
+        </p>
+      </div>
+
+      <button
+        class="big-btn ghost"
+        style="margin-top:10px"
+        onclick="showToast('📱 Sending message to your care team...')"
+      >
+        📞 Ask My Care Team
+      </button>
+    </div>
+  </div>
+`;
 
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('med-modal').classList.add('open');
+}
+
+function toggleMissedDoseBox() {
+  const content = document.getElementById('missed-dose-content');
+  const button = document.getElementById('missed-dose-toggle-btn');
+
+  if (!content || !button) return;
+
+  const isOpen = content.style.display === 'block';
+
+  content.style.display = isOpen ? 'none' : 'block';
+  button.textContent = isOpen ? '▾' : '▴';
+  button.setAttribute('aria-expanded', String(!isOpen));
 }
 
 function closeMedModal(e) {
@@ -1344,6 +1425,91 @@ function saveNewReminder() {
   showToast('✅ New reminder added!');
 }
 
+// ── WEEKLY OVERVIEW ──
+function getTodayWeekKey() {
+  const dayIndex = new Date().getDay();
+  const map = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
+  return map[dayIndex];
+}
+
+function getWeekOverviewDisplayValue(dayKey, value) {
+  const todayKey = getTodayWeekKey();
+
+  if (value === true) {
+    return {
+      symbol: '✓',
+      background: 'var(--green)'
+    };
+  }
+
+  if (value === false) {
+    return {
+      symbol: '✗',
+      background: '#F5C6C6'
+    };
+  }
+
+  if (dayKey === todayKey) {
+    return {
+      symbol: '↑',
+      background: 'var(--gold)'
+    };
+  }
+
+  return {
+    symbol: '',
+    background: 'var(--gray-soft)'
+  };
+}
+
+function renderWeekOverview() {
+  const container = document.getElementById('weekly-overview-grid');
+  if (!container) return;
+
+  const orderedDays = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
+  container.innerHTML = '';
+
+  orderedDays.forEach(dayKey => {
+    const status = appState.weekOverview?.[dayKey] ?? null;
+    const display = getWeekOverviewDisplayValue(dayKey, status);
+
+    container.innerHTML += `
+      <div>
+        <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--gray-mid)">
+          ${dayKey}
+        </div>
+        <div
+          style="
+            width:32px;
+            height:32px;
+            border-radius:50%;
+            background:${display.background};
+            color:${display.symbol === '✓' ? 'white' : 'var(--text-dark)'};
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:14px;
+            margin:4px auto;
+          "
+        >
+          ${display.symbol}
+        </div>
+      </div>
+    `;
+  });
+}
+
+function updateWeekOverviewForToday() {
+  if (!appState.weekOverview) return;
+
+  const todayKey = getTodayWeekKey();
+  const total = appState.reminders.length;
+  const taken = appState.reminders.filter(r => appState.takenMeds[r.id]).length;
+
+  appState.weekOverview[todayKey] = total > 0 && taken === total ? true : null;
+  saveState();
+}
+
 function reminderTimeToMinutes(timeStr) {
   const { hours, minutes } = parseTimeString(timeStr);
   return (hours * 60) + minutes;
@@ -1355,6 +1521,13 @@ function showRefillSuccess() {
 }
 function closeRefillSuccess() {
   document.getElementById('refill-success').classList.remove('open');
+}
+
+function showMedTakenSuccess() {
+  document.getElementById('med-taken-success').classList.add('open');
+}
+function closeMedTakenSuccess() {
+  document.getElementById('med-taken-success').classList.remove('open');
 }
 
 // ── TOAST ──
@@ -1388,6 +1561,7 @@ renderScheduleReminders();
 updateProgress();
 renderCurrentAlert();
 checkMissedDoses();
+renderWeekOverview();
 setInterval(checkMissedDoses, 60000);
 </script>
 </body>
