@@ -25,7 +25,6 @@
       <div>
         <div class="greeting">Good morning,</div>
         <div class="name">Alex Johnson 👋</div>
-        <div class="badge"><span class="dot"></span> 2 meds due today</div>
       </div>
       <div class="avatar">AJ</div>
     </div>
@@ -89,6 +88,12 @@
       </div>
     </div>
 
+    <!-- Medication Management button-->
+    <button class="big-btn primary" onclick="openManageMedicationsModal()">
+      Manage My Medications
+    </button>
+
+
     <!-- Today's Medications -->
     <div class="card">
       <div class="card-title">Today's Medications</div>
@@ -97,17 +102,153 @@
 
     <!-- Missed Dose Help -->
     <div class="card">
-      <div class="card-title">Missed a Dose?</div>
-      <div class="missed-box">
-        <div class="missed-box-title">🔴 What to do if you forget</div>
-        <p>Take it as soon as you remember. If it's almost time for your next dose, skip the missed one. <strong>Never take two doses at once.</strong></p>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
+
+        <button
+          type="button"
+          id="missed-dose-toggle-btn"
+          class="missed-toggle-btn"
+          onclick="toggleMissedDoseBox()"
+          aria-expanded="false"
+          aria-controls="missed-dose-content"
+          style="
+            background:none;
+            border:none;
+            cursor:pointer;
+            font-size:20px;
+            font-weight:900;
+            color:var(--text-dark);
+            line-height:1;
+          "
+        >
+          ▾
+        </button>
       </div>
-      <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📱 Sending message to your care team...')">
-        📞 Ask My Care Team
-      </button>
+
+      <div id="missed-dose-content" style="display:none; margin-top:10px;">
+        <div class="missed-box">
+          <div class="missed-box-title">🔴 What to do if you forget</div>
+          <p style="margin:0;">
+            Take it as soon as you remember. If it's almost time for your next dose, skip the missed one.
+            <strong>Never take two doses at once.</strong>
+          </p>
+        </div>
+
+        <button
+          class="big-btn ghost"
+          style="margin-top:10px"
+          onclick="showToast('📱 Sending message to your care team...')"
+        >
+          📞 Ask My Care Team
+        </button>
+      </div>
     </div>
 
   </div><!-- end home -->
+
+  <!-- Manage Medications Modal -->
+  <div class="modal-overlay" id="manage-medications-modal" onclick="closeManageMedicationsModal(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
+        Manage My Medications
+      </div>
+      <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
+        View your current medications. You can edit or remove them here.
+      </div>
+
+      <div id="manage-medications-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+
+      <button
+        class="big-btn primary"
+        style="margin-top:18px;"
+         onclick="openAddMedicationModal()"
+      >
+        ➕ Add New Medication
+      </button>
+
+      <button
+        class="big-btn ghost"
+        style="margin-top:10px;"
+        onclick="closeManageMedicationsModalDirect()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!--Add Medication Modal-->
+  <div class="modal-overlay" id="add-medication-modal" onclick="closeAddMedicationModal(event)">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
+        Add New Medication
+      </div>
+      <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
+        Add a medication profile with a name, description, and reference image.
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label for="medication-name" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            Medication Name
+          </label>
+          <input
+            id="medication-name"
+            type="text"
+            placeholder="Example: Metformin"
+            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
+          >
+        </div>
+
+        <div>
+          <label for="medication-shape" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            Shape Description
+          </label>
+          <input
+            id="medication-shape"
+            type="text"
+            placeholder="Example: Oval, white, scored"
+            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
+          >
+        </div>
+
+        <div>
+          <label for="medication-image" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            Upload Image
+          </label>
+          <input
+            id="medication-image"
+            type="file"
+            accept="image/*"
+            style="width:100%;padding:12px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;background:var(--white);"
+          >
+          <div style="font-size:12px;color:var(--text-medium);margin-top:6px;">
+            Upload a reference image of the pill or medication bottle.
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="big-btn primary"
+        style="margin-top:18px;"
+        onclick="submitNewMedicationDemo()"
+      >
+        Save Medication
+      </button>
+
+      <button
+        class="big-btn ghost"
+        style="margin-top:10px;"
+        onclick="closeAddMedicationModalDirect()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
 
   <!-- ══════════ SCHEDULE SCREEN ══════════ -->
   <div class="screen" id="screen-schedule">
@@ -271,7 +412,7 @@
           ➕ Save Reminder
         </button>
 
-        <button class="big-btn secondary" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
+        <button class="big-btn ghost" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
           Cancel
         </button>
       </div>
@@ -279,36 +420,10 @@
 
     <div class="card" style="margin-top:14px">
       <div class="card-title">Weekly Overview</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center">
-        <div v-for="d in days">
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">M</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">T</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">W</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green); color:var(--white); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Th</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:#F5C6C6;display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✗</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">F</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Sa</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--green);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">✓</div>
-        </div>
-        <div>
-          <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">Su</div>
-          <div style="width:32px;height:32px;border-radius:50%;background:var(--gold); display:flex;align-items:center;justify-content:center;font-size:14px;margin:4px auto">→</div>
-        </div>
-      </div>
+      <div
+        id="weekly-overview-grid"
+        style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center"
+      ></div>
     </div>
   </div><!-- end schedule -->
 
@@ -509,6 +624,16 @@
     </button>
   </div>
 
+  <!-- ══════════ Med Taken Success ══════════ -->
+  <div class="success-overlay" id="med-taken-success">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Medication Taken!</div>
+    <div class="success-sub">Great job! You've successfully taken your medication for today.</div>
+    <button class="big-btn" style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)" onclick="closeMedTakenSuccess()">
+      Got it 👍
+    </button>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast">
     <span id="toast-text">Done!</span>
@@ -545,6 +670,15 @@ const REMINDER_DOT_COLORS = [
 const defaultAppState = {
   takenMeds: {},
   dismissedAlerts: [],
+  weekOverview: {
+    M: null,
+    T: null,
+    W: null,
+    Th: null,
+    F: null,
+    Sa: null,
+    Su: null
+  },
   medicines: [
     {
       id: 'metformin',
@@ -707,6 +841,162 @@ function renderTodayMedications() {
   });
 }
 
+function renderManageMedicationsList() {
+  const container = document.getElementById('manage-medications-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  appState.medicines.forEach((med, index) => {
+    const bgColor = MED_BACKGROUND_COLORS[index % MED_BACKGROUND_COLORS.length];
+
+    container.innerHTML += `
+      <div
+        style="
+          background:var(--white);
+          border:1px solid var(--gray-soft);
+          border-radius:16px;
+          padding:14px;
+          display:flex;
+          align-items:flex-start;
+          gap:12px;
+        "
+      >
+        <div
+          style="
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            background:${bgColor};
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            flex-shrink:0;
+            position:relative;
+          "
+        >
+          ${MED_ICON}
+          ${med.changed ? `
+            <div
+              style="
+                position:absolute;
+                top:-4px;
+                right:-4px;
+                width:18px;
+                height:18px;
+                border-radius:50%;
+                background:#C0392B;
+                color:white;
+                font-size:11px;
+                font-weight:900;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                border:2px solid var(--white);
+              "
+            >
+              !
+            </div>
+          ` : ''}
+        </div>
+
+        <div style="flex:1; min-width:0;">
+          <div style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--text-dark);">
+            ${med.name}
+          </div>
+          <div style="font-size:13px;color:var(--text-medium);margin-top:4px;line-height:1.4;">
+            ${med.shape || ''}
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+            <button
+              class="medium-btn"
+              style="background:var(--gold-pale);color:var(--maroon);"
+              onclick="showToast('✏️ Edit ${med.name} coming soon!')"
+            >
+              Edit
+            </button>
+
+            <button
+              class="medium-btn"
+              style="background:var(--red-light);color:var(--red);"
+              onclick="showToast('🗑️ Delete ${med.name} coming soon!')"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function openManageMedicationsModal() {
+  renderManageMedicationsList();
+  document.getElementById('manage-medications-modal').classList.add('open');
+}
+
+function closeManageMedicationsModal(event) {
+  if (event.target === document.getElementById('manage-medications-modal')) {
+    document.getElementById('manage-medications-modal').classList.remove('open');
+  }
+}
+
+function closeManageMedicationsModalDirect() {
+  document.getElementById('manage-medications-modal').classList.remove('open');
+}
+function openAddMedicationModal() {
+  clearAddMedicationForm();
+  closeManageMedicationsModalDirect();
+  document.getElementById('add-medication-modal').classList.add('open');
+}
+
+function closeAddMedicationModal(event) {
+  if (event.target === document.getElementById('add-medication-modal')) {
+    document.getElementById('add-medication-modal').classList.remove('open');
+  }
+}
+
+function closeAddMedicationModalDirect() {
+  document.getElementById('add-medication-modal').classList.remove('open');
+}
+
+function clearAddMedicationForm() {
+  const nameInput = document.getElementById('medication-name');
+  const shapeInput = document.getElementById('medication-shape');
+  const imageInput = document.getElementById('medication-image');
+
+  if (nameInput) nameInput.value = '';
+  if (shapeInput) shapeInput.value = '';
+  if (imageInput) imageInput.value = '';
+}
+
+function submitNewMedicationDemo() {
+  const name = document.getElementById('medication-name').value.trim();
+  const shape = document.getElementById('medication-shape').value.trim();
+  const imageInput = document.getElementById('medication-image');
+  const fileName = imageInput && imageInput.files.length ? imageInput.files[0].name : '';
+
+  if (!name) {
+    showToast('Please enter a medication name.');
+    return;
+  }
+
+  if (!shape) {
+    showToast('Please enter a shape description.');
+    return;
+  }
+
+  if (!fileName) {
+    showToast('Please upload an image.');
+    return;
+  }
+
+  closeAddMedicationModalDirect();
+  showToast('✅ Medication form captured for MVP demo!');
+}
+
 function removeMissedAlertForReminder(reminderId) {
   alerts = alerts.filter(alert => alert.id !== 'missed-' + reminderId);
 }
@@ -769,17 +1059,38 @@ function renderScheduleReminders() {
           <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">
             ${reminder.label}
           </div>
+
           <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
             Take <strong>${med.name} ${reminder.dosage || ''}</strong>
           </div>
+
           <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
             ${reminder.smallNote || ''}
           </div>
+
           <div class="reminder-row" style="margin-top:8px">
             <div class="reminder-chip">
               ${getReminderIcon(reminder.reminderType)} ${reminder.reminderType}
             </div>
             ${speakerChip}
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button
+              class="medium-btn"
+              style="background:var(--gold-pale); color:var(--maroon);"
+              onclick="showToast('✏️ Edit ${reminder.label} coming soon!')"
+            >
+              Edit
+            </button>
+
+            <button
+              class="medium-btn"
+              style="background:var(--red-light); color:var(--red);"
+              onclick="showToast('🗑️ Delete ${reminder.label} coming soon!')"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -834,6 +1145,15 @@ function updateProgress() {
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('progress-pct').textContent = pct + '%';
   document.querySelector('.progress-label span').textContent = `${taken} of ${total} taken`;
+
+  if (pct === 100) {
+    setTimeout(() => {
+      showMedTakenSuccess();
+    }, 500);
+  }
+
+  updateWeekOverviewForToday();
+  renderWeekOverview();
 }
 
 // ── MAIN ALERT BANNER ──
@@ -1056,20 +1376,66 @@ function openMedDetail(id, reminderId) {
   });
 
   html += `
-    <div class="missed-box" style="margin-top:16px">
-      <div class="missed-box-title">🔴 If you miss a dose</div>
-      <p>Take it as soon as you remember. If your next dose is in less than 2 hours, skip the missed one. Never double up.</p>
+  <div class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
+
+      <button
+        type="button"
+        id="missed-dose-toggle-btn"
+        class="missed-toggle-btn"
+        onclick="toggleMissedDoseBox()"
+        aria-expanded="false"
+        aria-controls="missed-dose-content"
+        style="
+          background:none;
+          border:none;
+          cursor:pointer;
+          font-size:20px;
+          font-weight:900;
+          color:var(--text-dark);
+          line-height:1;
+        "
+      >
+        ▾
+      </button>
     </div>
-    <button class="big-btn primary" style="margin-top:16px" onclick="closeMedModalDirect();takeMed('${id}')">
-      ✅ Mark as Taken
-    </button>
-    <button class="big-btn ghost" style="margin-top:10px" onclick="showToast('📞 Sending message to Dr. Martinez...');closeMedModalDirect()">
-      ❓ Ask My Doctor
-    </button>
-  `;
+
+    <div id="missed-dose-content" style="display:none; margin-top:10px;">
+      <div class="missed-box">
+        <div class="missed-box-title">🔴 What to do if you forget</div>
+        <p style="margin:0;">
+          Take it as soon as you remember. If it's almost time for your next dose, skip the missed one.
+          <strong>Never take two doses at once.</strong>
+        </p>
+      </div>
+
+      <button
+        class="big-btn ghost"
+        style="margin-top:10px"
+        onclick="showToast('📱 Sending message to your care team...')"
+      >
+        📞 Ask My Care Team
+      </button>
+    </div>
+  </div>
+`;
 
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('med-modal').classList.add('open');
+}
+
+function toggleMissedDoseBox() {
+  const content = document.getElementById('missed-dose-content');
+  const button = document.getElementById('missed-dose-toggle-btn');
+
+  if (!content || !button) return;
+
+  const isOpen = content.style.display === 'block';
+
+  content.style.display = isOpen ? 'none' : 'block';
+  button.textContent = isOpen ? '▾' : '▴';
+  button.setAttribute('aria-expanded', String(!isOpen));
 }
 
 function closeMedModal(e) {
@@ -1344,6 +1710,91 @@ function saveNewReminder() {
   showToast('✅ New reminder added!');
 }
 
+// ── WEEKLY OVERVIEW ──
+function getTodayWeekKey() {
+  const dayIndex = new Date().getDay();
+  const map = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
+  return map[dayIndex];
+}
+
+function getWeekOverviewDisplayValue(dayKey, value) {
+  const todayKey = getTodayWeekKey();
+
+  if (value === true) {
+    return {
+      symbol: '✓',
+      background: 'var(--green)'
+    };
+  }
+
+  if (value === false) {
+    return {
+      symbol: '✗',
+      background: '#F5C6C6'
+    };
+  }
+
+  if (dayKey === todayKey) {
+    return {
+      symbol: '↑',
+      background: 'var(--gold)'
+    };
+  }
+
+  return {
+    symbol: '',
+    background: 'var(--gray-soft)'
+  };
+}
+
+function renderWeekOverview() {
+  const container = document.getElementById('weekly-overview-grid');
+  if (!container) return;
+
+  const orderedDays = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
+  container.innerHTML = '';
+
+  orderedDays.forEach(dayKey => {
+    const status = appState.weekOverview?.[dayKey] ?? null;
+    const display = getWeekOverviewDisplayValue(dayKey, status);
+
+    container.innerHTML += `
+      <div>
+        <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">
+          ${dayKey}
+        </div>
+        <div
+          style="
+            width:32px;
+            height:32px;
+            border-radius:50%;
+            background:${display.background};
+            color:${display.symbol === '✓' ? 'white' : 'var(--text-dark)'};
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:14px;
+            margin:4px auto;
+          "
+        >
+          ${display.symbol}
+        </div>
+      </div>
+    `;
+  });
+}
+
+function updateWeekOverviewForToday() {
+  if (!appState.weekOverview) return;
+
+  const todayKey = getTodayWeekKey();
+  const total = appState.reminders.length;
+  const taken = appState.reminders.filter(r => appState.takenMeds[r.id]).length;
+
+  appState.weekOverview[todayKey] = total > 0 && taken === total ? true : null;
+  saveState();
+}
+
 function reminderTimeToMinutes(timeStr) {
   const { hours, minutes } = parseTimeString(timeStr);
   return (hours * 60) + minutes;
@@ -1355,6 +1806,13 @@ function showRefillSuccess() {
 }
 function closeRefillSuccess() {
   document.getElementById('refill-success').classList.remove('open');
+}
+
+function showMedTakenSuccess() {
+  document.getElementById('med-taken-success').classList.add('open');
+}
+function closeMedTakenSuccess() {
+  document.getElementById('med-taken-success').classList.remove('open');
 }
 
 // ── TOAST ──
@@ -1388,6 +1846,7 @@ renderScheduleReminders();
 updateProgress();
 renderCurrentAlert();
 checkMissedDoses();
+renderWeekOverview();
 setInterval(checkMissedDoses, 60000);
 </script>
 </body>
