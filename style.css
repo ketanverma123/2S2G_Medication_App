@@ -691,7 +691,7 @@
     color: var(--maroon-dark);
   }
   .scroll-list {
-    max-height: 250px;
+    max-height: 300px;
     overflow-y: auto;
     padding-right: 4px;
     }
