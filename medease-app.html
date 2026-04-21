@@ -33,45 +33,28 @@
   <!-- ══════════ HOME SCREEN ══════════ -->
   <div class="screen active" id="screen-home">
 
-    <!-- Alert -->
-    <div class="alert-banner warning" id="main-alert-banner" style="margin-top:4px; display:none;">
+    <!-- Alert Banner -->
+    <div class="alert-banner warning" id="main-alert-banner" style="margin-top:4px;display:none;">
       <div style="flex:1;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px;">
-          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span class="alert-icon" id="main-alert-icon">⚠️</span>
-            <span
-              style="font-family:'Nunito',sans-serif; font-size:12px; font-weight:800; letter-spacing:0.4px;"
-              id="main-alert-count"
-            >
-              1 Alert
-            </span>
+            <span style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.4px;"
+              id="main-alert-count">1 Alert</span>
           </div>
-
-          <button
-            onclick="dismissCurrentAlert()"
-            aria-label="Dismiss current alert"
-            style="background:none; border:none; cursor:pointer; font-family:'Nunito',sans-serif; font-size:12px; font-weight:800; color:inherit;"
-          >
-            Dismiss
-          </button>
+          <button onclick="dismissCurrentAlert()" aria-label="Dismiss current alert"
+            style="background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;
+                   font-size:12px;font-weight:800;color:inherit;">Dismiss</button>
         </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div style="flex:1;">
             <div class="alert-title" id="main-alert-title">Metformin appearance changed</div>
             <div class="alert-text" id="main-alert-text">
               Your pharmacy switched brands. The pill looks different — it's still the same medicine. See photo inside.
             </div>
           </div>
-
-          <button
-            id="next-alert-btn"
-            onclick="showNextAlert()"
-            aria-label="Show next alert"
-            style="background:none; border:none; cursor:pointer; font-size:22px; color:inherit; display:none;"
-          >
-            ➜
-          </button>
+          <button id="next-alert-btn" onclick="showNextAlert()" aria-label="Show next alert"
+            style="background:none;border:none;cursor:pointer;font-size:22px;color:inherit;display:none;">➜</button>
         </div>
       </div>
     </div>
@@ -88,45 +71,27 @@
       </div>
     </div>
 
-    <!-- Medication Management button-->
+    <!-- Medication Management button -->
     <button class="big-btn primary" onclick="openManageMedicationsModal()">
       Manage My Medications
     </button>
 
-
     <!-- Today's Medications -->
     <div class="card">
       <div class="card-title">Today's Medications</div>
-      <div class= "scroll-list" id="today-medications-list"></div>
+      <div class="scroll-list" id="today-medications-list"></div>
     </div>
 
     <!-- Missed Dose Help -->
     <div class="card">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
         <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
-
-        <button
-          type="button"
-          id="missed-dose-toggle-btn"
-          class="missed-toggle-btn"
-          onclick="toggleMissedDoseBox()"
-          aria-expanded="false"
-          aria-controls="missed-dose-content"
-          style="
-            background:none;
-            border:none;
-            cursor:pointer;
-            font-size:20px;
-            font-weight:900;
-            color:var(--text-dark);
-            line-height:1;
-          "
-        >
-          ▾
-        </button>
+        <button type="button" id="missed-dose-toggle-btn" class="missed-toggle-btn"
+          onclick="toggleMissedDoseBox()" aria-expanded="false" aria-controls="missed-dose-content"
+          style="background:none;border:none;cursor:pointer;font-size:20px;
+                 font-weight:900;color:var(--text-dark);line-height:1;">▾</button>
       </div>
-
-      <div id="missed-dose-content" style="display:none; margin-top:10px;">
+      <div id="missed-dose-content" style="display:none;margin-top:10px;">
         <div class="missed-box">
           <div class="missed-box-title">🔴 What to do if you forget</div>
           <p style="margin:0;">
@@ -134,12 +99,8 @@
             <strong>Never take two doses at once.</strong>
           </p>
         </div>
-
-        <button
-          class="big-btn ghost"
-          style="margin-top:10px"
-          onclick="showToast('📱 Sending message to your care team...')"
-        >
+        <button class="big-btn ghost" style="margin-top:10px"
+          onclick="showToast('📱 Sending message to your care team...')">
           📞 Ask My Care Team
         </button>
       </div>
@@ -147,104 +108,75 @@
 
   </div><!-- end home -->
 
-  <!-- Manage Medications Modal -->
+  <!-- ══════════ MANAGE MEDICATIONS MODAL ══════════ -->
   <div class="modal-overlay" id="manage-medications-modal" onclick="closeManageMedicationsModal(event)">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
-
-      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
-        Manage My Medications
-      </div>
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;
+        color:var(--text-dark);margin-bottom:6px;">Manage My Medications</div>
       <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
         View your current medications. You can edit or remove them here.
       </div>
-
       <div id="manage-medications-list" style="display:flex;flex-direction:column;gap:12px;"></div>
-
-      <button
-        class="big-btn primary"
-        style="margin-top:18px;"
-         onclick="openAddMedicationModal()"
-      >
+      <button class="big-btn primary" style="margin-top:18px;" onclick="openAddMedicationModal()">
         ➕ Add New Medication
       </button>
-
-      <button
-        class="big-btn ghost"
-        style="margin-top:10px;"
-        onclick="closeManageMedicationsModalDirect()"
-      >
+      <button class="big-btn ghost" style="margin-top:10px;" onclick="closeManageMedicationsModalDirect()">
         Close
       </button>
     </div>
   </div>
 
-  <!--Add Medication Modal-->
+  <!-- ══════════ ADD / EDIT MEDICATION MODAL ══════════ -->
   <div class="modal-overlay" id="add-medication-modal" onclick="closeAddMedicationModal(event)">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
-
-      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
-        Add New Medication
-      </div>
-      <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
+      <div id="add-medication-modal-title"
+        style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;
+               color:var(--text-dark);margin-bottom:6px;">Add New Medication</div>
+      <div id="add-medication-modal-subtitle"
+        style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
         Add a medication profile with a name, description, and reference image.
       </div>
 
       <div style="display:flex;flex-direction:column;gap:14px;">
         <div>
-          <label for="medication-name" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+          <label for="medication-name"
+            style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
             Medication Name
           </label>
-          <input
-            id="medication-name"
-            type="text"
-            placeholder="Example: Metformin"
-            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
-          >
+          <input id="medication-name" type="text" placeholder="Example: Metformin"
+            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
         </div>
 
         <div>
-          <label for="medication-shape" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+          <label for="medication-shape"
+            style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
             Shape Description
           </label>
-          <input
-            id="medication-shape"
-            type="text"
-            placeholder="Example: Oval, white, scored"
-            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
-          >
+          <input id="medication-shape" type="text" placeholder="Example: Oval, white, scored"
+            style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
         </div>
 
         <div>
-          <label for="medication-image" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+          <label for="medication-image"
+            style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
             Upload Image
           </label>
-          <input
-            id="medication-image"
-            type="file"
-            accept="image/*"
-            style="width:100%;padding:12px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;background:var(--white);"
-          >
+          <!-- Existing image preview (shown in edit mode) -->
+          <div id="medication-image-preview" style="margin-bottom:8px;"></div>
+          <input id="medication-image" type="file" accept="image/*"
+            style="width:100%;padding:12px;border-radius:12px;border:1px solid #D8D1CA;
+                   font-size:15px;background:var(--white);">
           <div style="font-size:12px;color:var(--text-medium);margin-top:6px;">
             Upload a reference image of the pill or medication bottle.
           </div>
         </div>
       </div>
 
-      <button
-        class="big-btn primary"
-        style="margin-top:18px;"
-        onclick="submitNewMedicationDemo()"
-      >
-        Save Medication
-      </button>
-
-      <button
-        class="big-btn ghost"
-        style="margin-top:10px;"
-        onclick="closeAddMedicationModalDirect()"
-      >
+      <button id="submit-medication-btn" class="big-btn primary" style="margin-top:18px;"
+        onclick="submitMedicationForm()">Save Medication</button>
+      <button class="big-btn ghost" style="margin-top:10px;" onclick="closeAddMedicationModalDirect()">
         Cancel
       </button>
     </div>
@@ -271,29 +203,32 @@
       ➕ Add a New Reminder
     </button>
 
-    <!-- ══════════ ADD REMINDER MODAL ══════════ -->
+    <!-- ══════════ ADD / EDIT REMINDER MODAL ══════════ -->
     <div class="modal-overlay" id="add-reminder-modal" onclick="closeAddReminderModal(event)">
       <div class="modal-sheet">
         <div class="modal-handle"></div>
-
-        <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
-          Add Reminder
-        </div>
-        <div style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
+        <div id="add-reminder-modal-title"
+          style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;
+                 color:var(--text-dark);margin-bottom:6px;">Add Reminder</div>
+        <div id="add-reminder-modal-subtitle"
+          style="font-size:14px;color:var(--text-medium);margin-bottom:18px;line-height:1.5;">
           Create a simple medicine reminder.
         </div>
 
         <div style="display:flex;flex-direction:column;gap:14px;">
           <div>
-            <label for="reminder-medication" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-medication"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Medication
             </label>
-            <select id="reminder-medication" style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+            <select id="reminder-medication"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
             </select>
           </div>
 
           <div>
-            <label for="reminder-label" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-label"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Reminder title
             </label>
             <input id="reminder-label" type="text" placeholder="Example: Dinner time"
@@ -301,7 +236,8 @@
           </div>
 
           <div>
-            <label for="reminder-time" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-time"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Time
             </label>
             <div style="display:flex;gap:10px;">
@@ -316,22 +252,16 @@
           </div>
 
           <div>
-            <label for="reminder-dosage-amount" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-dosage-amount"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Dosage
             </label>
             <div style="display:flex;gap:10px;">
-              <input
-                id="reminder-dosage-amount"
-                type="number"
-                min="1"
-                step="1"
+              <input id="reminder-dosage-amount" type="number" min="1" step="1"
                 placeholder="Example: 2"
-                style="flex:1;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
-              >
-              <select
-                id="reminder-dosage-unit"
-                style="width:120px;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
-              >
+                style="flex:1;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
+              <select id="reminder-dosage-unit"
+                style="width:120px;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
                 <option value="mg">mg</option>
                 <option value="pill(s)">pill(s)</option>
               </select>
@@ -339,14 +269,12 @@
           </div>
 
           <div>
-            <label for="reminder-type" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-type"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Set Reminder Type
             </label>
-
-            <select
-              id="reminder-type"
-              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;"
-            >
+            <select id="reminder-type"
+              style="width:100%;padding:14px;border-radius:12px;border:1px solid #D8D1CA;font-size:15px;">
               <option value="Alarm Set">Alarm</option>
               <option value="Push Notification Set">Push Notification</option>
               <option value="Notifications On">Phone Notification</option>
@@ -359,31 +287,18 @@
             <label style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Speaker Sound
             </label>
-
             <div class="toggle-group" id="reminder-speaker-toggle">
-              <button
-                type="button"
-                class="toggle-btn active"
-                data-value="On"
-                onclick="setToggleValue('reminder-speaker', 'On', this)"
-              >
-                On
-              </button>
-              <button
-                type="button"
-                class="toggle-btn"
-                data-value="Off"
-                onclick="setToggleValue('reminder-speaker', 'Off', this)"
-              >
-                Off
-              </button>
+              <button type="button" class="toggle-btn active" data-value="On"
+                onclick="setToggleValue('reminder-speaker','On',this)">On</button>
+              <button type="button" class="toggle-btn" data-value="Off"
+                onclick="setToggleValue('reminder-speaker','Off',this)">Off</button>
             </div>
-
             <input type="hidden" id="reminder-speaker" value="On">
           </div>
 
           <div>
-            <label for="reminder-small-note" style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
+            <label for="reminder-small-note"
+              style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Small note
             </label>
             <input id="reminder-small-note" type="text" placeholder="Optional"
@@ -394,36 +309,26 @@
             <label style="display:block;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;margin-bottom:6px;">
               Steps
             </label>
-
             <div id="reminder-steps-list" style="display:flex;flex-direction:column;gap:10px;"></div>
-
-            <button
-              type="button"
-              class="medium-btn ghost"
-              style="margin-top:10px;"
-              onclick="addReminderStepRow()"
-            >
-              ➕ Add Step
-            </button>
+            <button type="button" class="medium-btn ghost" style="margin-top:10px;"
+              onclick="addReminderStepRow()">➕ Add Step</button>
           </div>
         </div>
 
-        <button class="big-btn primary" style="margin-top:18px;" onclick="saveNewReminder()">
-          ➕ Save Reminder
-        </button>
-
+        <button id="save-reminder-btn" class="big-btn primary" style="margin-top:18px;"
+          onclick="saveReminderForm()">➕ Save Reminder</button>
         <button class="big-btn ghost" style="margin-top:10px;" onclick="closeAddReminderModalDirect()">
           Cancel
         </button>
       </div>
     </div>
 
+    <!-- Weekly Overview -->
     <div class="card" style="margin-top:14px">
       <div class="card-title">Weekly Overview</div>
-      <div
-        id="weekly-overview-grid"
-        style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center"
-      ></div>
+      <div id="weekly-overview-grid"
+        style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center">
+      </div>
     </div>
   </div><!-- end schedule -->
 
@@ -470,7 +375,8 @@
         <div class="rx-status partial"><span class="status-dot"></span>Partial</div>
       </div>
       <div style="border-radius:var(--radius-sm);padding:12px;font-size:13px;">
-        ℹ️ Only <strong>30 of 60 tablets</strong> are available now. The rest will arrive Thursday. <strong>Appearance has changed</strong> — see your Home tab for info.
+        ℹ️ Only <strong>30 of 60 tablets</strong> are available now. The rest will arrive Thursday.
+        <strong>Appearance has changed</strong> — see your Home tab for info.
       </div>
       <div class="rx-bottom">
         <button class="refill-btn schedule" onclick="showToast('📋 Opening provider-pharmacist log...')">💬 See Provider Notes</button>
@@ -489,7 +395,8 @@
         <div class="rx-status pending"><span class="status-dot"></span>Pending</div>
       </div>
       <div style="border-radius:var(--radius-sm);padding:12px;font-size:13px;">
-        ⏳ Prescription sent to pharmacy. Usually ready in <strong>1–2 days</strong>. You'll get an alert when it's ready.
+        ⏳ Prescription sent to pharmacy. Usually ready in <strong>1–2 days</strong>.
+        You'll get an alert when it's ready.
       </div>
       <div class="rx-bottom">
         <button class="refill-btn schedule" onclick="showToast('🔔 You will be notified when it is ready!')">🔔 Notify When Ready</button>
@@ -524,7 +431,7 @@
       </div>
     </div>
 
-    <!-- Contacts -->
+    <!-- Quick Contact -->
     <div class="card">
       <div class="card-title">Quick Contact</div>
       <div style="display:flex;flex-direction:column;gap:10px">
@@ -555,10 +462,11 @@
           </div>
           <button class="refill-btn tap-refill" onclick="showToast('📞 Calling CVS Pharmacy...')">Call</button>
         </div>
+
       </div>
     </div>
 
-    <!-- Notifications Setup -->
+    <!-- Caregiver Alerts -->
     <div class="card">
       <div class="card-title">Caregiver Alerts</div>
       <div style="font-size:14px;color:var(--text-medium);margin-bottom:12px;line-height:1.5">
@@ -567,12 +475,14 @@
       <div class="reminder-row">
         <div class="caregiver-chip">👩‍👩‍👦 Mom (Sarah) ✓</div>
         <div class="caregiver-chip">👩‍⚕️ Dr. Martinez ✓</div>
-        <div class="caregiver-chip" onclick="showToast('➕ Add another contact')">➕ Add someone</div>
+        <div class="caregiver-chip" onclick="addCaregiverContact()">➕ Add someone</div>
       </div>
     </div>
 
     <!-- Emergency -->
-    <button class="big-btn primary" style="background:var(--red);box-shadow:0 4px 16px rgba(192,57,43,0.3)" onclick="showToast('🚨 Connecting to emergency line...')">
+    <button class="big-btn primary"
+      style="background:var(--red);box-shadow:0 4px 16px rgba(192,57,43,0.3)"
+      onclick="showToast('🚨 Connecting to emergency line...')">
       🚨 Emergency Help
     </button>
 
@@ -581,20 +491,16 @@
   <!-- ══════════ BOTTOM NAV ══════════ -->
   <div class="bottom-nav">
     <button class="bnav-btn active" onclick="switchBnav('home',this)">
-      <span class="bnav-icon">🏠</span>
-      <span class="bnav-label">Home</span>
+      <span class="bnav-icon">🏠</span><span class="bnav-label">Home</span>
     </button>
     <button class="bnav-btn" onclick="switchBnav('schedule',this)">
-      <span class="bnav-icon">📅</span>
-      <span class="bnav-label">Schedule</span>
+      <span class="bnav-icon">📅</span><span class="bnav-label">Schedule</span>
     </button>
     <button class="bnav-btn" onclick="switchBnav('pharmacy',this)">
-      <span class="bnav-icon">🏪</span>
-      <span class="bnav-label">Pharmacy</span>
+      <span class="bnav-icon">🏪</span><span class="bnav-label">Pharmacy</span>
     </button>
     <button class="bnav-btn" onclick="switchBnav('care',this)">
-      <span class="bnav-icon">👥</span>
-      <span class="bnav-label">Care Team</span>
+      <span class="bnav-icon">👥</span><span class="bnav-label">Care Team</span>
     </button>
   </div>
 
@@ -606,32 +512,32 @@
     </div>
   </div>
 
- <!-- ══════════ PILL IMAGE MODAL ══════════ -->
+  <!-- ══════════ PILL IMAGE MODAL ══════════ -->
   <div class="modal-overlay" id="pill-image-modal" onclick="closePillImageModal(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div id="pill-image-content" style="text-align:center;"></div>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="pill-image-content" style="text-align:center;"></div>
+    </div>
   </div>
-</div>
 
   <!-- ══════════ REFILL SUCCESS ══════════ -->
   <div class="success-overlay" id="refill-success">
     <div class="success-icon">✅</div>
     <div class="success-title">Refill Requested!</div>
     <div class="success-sub">Your Lisinopril refill is on its way. You'll get an alert when it's ready for pickup or delivery.</div>
-    <button class="big-btn" style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)" onclick="closeRefillSuccess()">
-      Got it 👍
-    </button>
+    <button class="big-btn"
+      style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)"
+      onclick="closeRefillSuccess()">Got it 👍</button>
   </div>
 
-  <!-- ══════════ Med Taken Success ══════════ -->
+  <!-- ══════════ MED TAKEN SUCCESS ══════════ -->
   <div class="success-overlay" id="med-taken-success">
     <div class="success-icon">✅</div>
     <div class="success-title">Medication Taken!</div>
     <div class="success-sub">Great job! You've successfully taken your medication for today.</div>
-    <button class="big-btn" style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)" onclick="closeMedTakenSuccess()">
-      Got it 👍
-    </button>
+    <button class="big-btn"
+      style="background:white;color:var(--green);font-family:'Nunito';font-weight:900;margin-top:12px;border-radius:var(--radius)"
+      onclick="closeMedTakenSuccess()">Got it 👍</button>
   </div>
 
   <!-- Toast -->
@@ -640,1214 +546,13 @@
   </div>
 </div><!-- end phone -->
 
-<script>
-// ── TAB SWITCHING ──
-function switchBnav(id, el) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-  el.classList.add('active');
-}
-
-// ── APP STATE MANAGEMENT ──
-const STORAGE_KEY = 'medeaseAppState';
-const MED_ICON = '💊';
-
-const MED_BACKGROUND_COLORS = [
-  '#FDECEA', // soft red
-  '#EAF4EC', // soft green
-  '#EBF5FB', // soft blue
-  '#FEF3E6', // soft orange
-  '#F4ECF7'  // soft purple
-];
-const REMINDER_DOT_COLORS = [
-  'var(--maroon)',
-  'var(--green)',
-  'var(--blue)',
-  'var(--orange)'
-];
-// DEFAULT APP STATE
-const defaultAppState = {
-  takenMeds: {},
-  dismissedAlerts: [],
-  weekOverview: {
-    M: false,
-    T: null,
-    W: null,
-    Th: null,
-    F: null,
-    Sa: null,
-    Su: null
-  },
-  medicines: [
-    {
-      id: 'metformin',
-      name: 'Metformin',
-      shape: 'Oval, white tablet · NEW: Z shown on one side, 69 on the other',
-      image: 'drug_profiles/metformin.jpg',
-      changed: true
-    },
-    {
-      id: 'lisinopril',
-      name: 'Lisinopril',
-      shape: 'Small, round, pink tablet, E3 shown on one side',
-      image: 'drug_profiles/lisinopril.jpeg',
-      changed: false
-    },
-    {
-      id: 'atorvastatin',
-      name: 'Atorvastatin',
-      shape: 'Oval, white, 11 shown on one side',
-      image: 'drug_profiles/atorvastatin.png',
-      changed: false
-    }
-  ],
-  reminders: [
-    {
-      id: 'metformin-reminder',
-      medId: 'metformin',
-      label: 'Breakfast time',
-      time: '8:00 AM',
-      dosage: '500mg',
-      reminderType: 'Alarm Set',
-      speaker: 'No speaker alarm',
-      smallNote: 'With breakfast 🍳',
-      steps: [
-        'Take 1 tablet (500mg)',
-        'Swallow with a full glass of water 💧',
-        'Take with your breakfast — this helps your stomach',
-        'Do NOT skip doses. If you forget, see the Missed Dose box below.'
-      ]
-    },
-    {
-      id: 'lisinopril-reminder',
-      medId: 'lisinopril',
-      label: 'Lunchtime',
-      time: '12:00 PM',
-      dosage: '10mg',
-      reminderType: 'Alarm Set',
-      speaker: 'Smart speaker',
-      smallNote: 'With lunch 🥗',
-      steps: [
-        'Take 1 tablet (10mg)',
-        'Swallow with water 💧',
-        'Take at lunchtime — same time every day',
-        'You can take with or without food'
-      ],
-    },
-    {
-      id: 'atorvastatin-reminder',
-      medId: 'atorvastatin',
-      label: 'Bedtime routine',
-      time: '9:00 PM',
-      dosage: '20mg',
-      reminderType: 'Alarm Set',
-      speaker: 'No speaker alarm',
-      smallNote: 'Before bed 🌙',
-      steps: [
-        'Take 1 tablet (20mg)',
-        'Swallow with water 💧',
-        'Take at the same time each night before bed 🌙',
-        'Avoid grapefruit juice while on this medicine'
-      ],
-    }
-  ]
-};
-
-function loadState() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  console.log('Loaded state:', saved);
-  if (!saved) return structuredClone(defaultAppState);
-
-  const parsed = JSON.parse(saved);
-
-  return {
-    ...structuredClone(defaultAppState),
-    ...parsed,
-    medicines: parsed.medicines || structuredClone(defaultAppState).medicines,
-    reminders: parsed.reminders || structuredClone(defaultAppState).reminders,
-    takenMeds: parsed.takenMeds || {},
-    dismissedAlerts: parsed.dismissedAlerts || []
-  };
-}
-
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-}
-
-let appState = loadState();
-
-// Build a lookup object for medicines by ID for easy access in the med detail view
-function buildMedData() {
-  const data = {};
-
-  appState.medicines.forEach(med => {
-    data[med.id] = {
-      name: med.name,
-      shape: med.shape,
-      image: med.image,
-      changed: med.changed
-    };
-  });
-
-  return data;
-}
-
-let medData = buildMedData();
-
-// -- Render today's medications list on the Home screen
-function renderTodayMedications() {
-  const container = document.getElementById('today-medications-list');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  const sortedReminders = [...appState.reminders].sort((a, b) => {
-    return reminderTimeToMinutes(a.time) - reminderTimeToMinutes(b.time);
-  });
-
-  sortedReminders.forEach((reminder, index) => {
-    const med = appState.medicines.find(m => m.id === reminder.medId);
-    if (!med) return;
-
-    const isTaken = !!appState.takenMeds[reminder.id];
-    const bgColor = MED_BACKGROUND_COLORS[index % MED_BACKGROUND_COLORS.length];
-    const alertBadge = med.changed
-      ? `<div class="pill-badge" style="background:#C0392B;color:white">!</div>`
-      : '';
-
-    container.innerHTML += `
-      <div class="med-item" onclick="openMedDetail('${med.id}', '${reminder.id}')">
-        <div class="pill-icon" style="background:${bgColor}">
-          ${MED_ICON}
-          ${alertBadge}
-        </div>
-        <div class="med-info">
-          <div class="med-name">${med.name}</div>
-          <div class="med-detail">${reminder.dosage || ''} · ${reminder.smallNote || ''}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="med-time">${reminder.time}</div>
-          <button
-            class="check-btn ${isTaken ? 'taken' : ''}"
-            id="check-${reminder.id}"
-            onclick="event.stopPropagation();takeReminder('${reminder.id}')"
-          >
-            ${isTaken ? '✓' : '○'}
-          </button>
-        </div>
-      </div>
-    `;
-  });
-}
-
-function renderManageMedicationsList() {
-  const container = document.getElementById('manage-medications-list');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  appState.medicines.forEach((med, index) => {
-    const bgColor = MED_BACKGROUND_COLORS[index % MED_BACKGROUND_COLORS.length];
-
-    container.innerHTML += `
-      <div
-        style="
-          background:var(--white);
-          border:1px solid var(--gray-soft);
-          border-radius:16px;
-          padding:14px;
-          display:flex;
-          align-items:flex-start;
-          gap:12px;
-        "
-      >
-        <div
-          style="
-            width:48px;
-            height:48px;
-            border-radius:14px;
-            background:${bgColor};
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:24px;
-            flex-shrink:0;
-            position:relative;
-          "
-        >
-          ${MED_ICON}
-          ${med.changed ? `
-            <div
-              style="
-                position:absolute;
-                top:-4px;
-                right:-4px;
-                width:18px;
-                height:18px;
-                border-radius:50%;
-                background:#C0392B;
-                color:white;
-                font-size:11px;
-                font-weight:900;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                border:2px solid var(--white);
-              "
-            >
-              !
-            </div>
-          ` : ''}
-        </div>
-
-        <div style="flex:1; min-width:0;">
-          <div style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:var(--text-dark);">
-            ${med.name}
-          </div>
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px;line-height:1.4;">
-            ${med.shape || ''}
-          </div>
-
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-            <button
-              class="medium-btn"
-              style="background:var(--gold-pale);color:var(--maroon);"
-              onclick="showToast('✏️ Edit ${med.name} coming soon!')"
-            >
-              Edit
-            </button>
-
-            <button
-              class="medium-btn"
-              style="background:var(--red-light);color:var(--red);"
-              onclick="showToast('🗑️ Delete ${med.name} coming soon!')"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-function openManageMedicationsModal() {
-  renderManageMedicationsList();
-  document.getElementById('manage-medications-modal').classList.add('open');
-}
-
-function closeManageMedicationsModal(event) {
-  if (event.target === document.getElementById('manage-medications-modal')) {
-    document.getElementById('manage-medications-modal').classList.remove('open');
-  }
-}
-
-function closeManageMedicationsModalDirect() {
-  document.getElementById('manage-medications-modal').classList.remove('open');
-}
-function openAddMedicationModal() {
-  clearAddMedicationForm();
-  closeManageMedicationsModalDirect();
-  document.getElementById('add-medication-modal').classList.add('open');
-}
-
-function closeAddMedicationModal(event) {
-  if (event.target === document.getElementById('add-medication-modal')) {
-    document.getElementById('add-medication-modal').classList.remove('open');
-  }
-}
-
-function closeAddMedicationModalDirect() {
-  document.getElementById('add-medication-modal').classList.remove('open');
-}
-
-function clearAddMedicationForm() {
-  const nameInput = document.getElementById('medication-name');
-  const shapeInput = document.getElementById('medication-shape');
-  const imageInput = document.getElementById('medication-image');
-
-  if (nameInput) nameInput.value = '';
-  if (shapeInput) shapeInput.value = '';
-  if (imageInput) imageInput.value = '';
-}
-
-function submitNewMedicationDemo() {
-  const name = document.getElementById('medication-name').value.trim();
-  const shape = document.getElementById('medication-shape').value.trim();
-  const imageInput = document.getElementById('medication-image');
-  const fileName = imageInput && imageInput.files.length ? imageInput.files[0].name : '';
-
-  if (!name) {
-    showToast('Please enter a medication name.');
-    return;
-  }
-
-  if (!shape) {
-    showToast('Please enter a shape description.');
-    return;
-  }
-
-  if (!fileName) {
-    showToast('Please upload an image.');
-    return;
-  }
-
-  closeAddMedicationModalDirect();
-  showToast('✅ Medication form captured for MVP demo!');
-}
-
-function removeMissedAlertForReminder(reminderId) {
-  alerts = alerts.filter(alert => alert.id !== 'missed-' + reminderId);
-}
-
-function takeReminder(reminderId) {
-  const btn = document.getElementById('check-' + reminderId);
-  if (!btn || btn.classList.contains('taken')) return;
-
-  const reminder = appState.reminders.find(r => r.id === reminderId);
-  if (!reminder) return;
-
-  const med = appState.medicines.find(m => m.id === reminder.medId);
-
-  appState.takenMeds[reminderId] = true;
-  saveState();
-
-  btn.classList.add('taken');
-  btn.textContent = '✓';
-
-  updateProgress();
-  removeMissedAlertForReminder(reminderId);
-  renderCurrentAlert();
-
-  showToast(`✅ ${med ? med.name : 'Medication'} marked as taken!`);
-}
-
-// -- Render schedule reminders on the Schedule screen
-function renderScheduleReminders() {
-  const container = document.getElementById('schedule-reminders-list');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  const sortedReminders = [...appState.reminders].sort((a, b) => {
-    return reminderTimeToMinutes(a.time) - reminderTimeToMinutes(b.time);
-  });
-
-  sortedReminders.forEach((reminder, index) => {
-    const med = appState.medicines.find(m => m.id === reminder.medId);
-    if (!med) return;
-
-    const connector = index < sortedReminders.length - 1
-      ? `<div class="time-connector"></div>`
-      : '';
-
-    const speakerChip = reminder.speaker === 'Smart speaker'
-      ? `<div class="reminder-chip">📢 Smart speaker</div>`
-      : `<div class="reminder-chip inactive">📢 No speaker alarm</div>`;
-
-    const dotColor = REMINDER_DOT_COLORS[index % REMINDER_DOT_COLORS.length];
-
-    container.innerHTML += `
-      <div class="time-block">
-        <div class="time-label">${reminder.time}</div>
-        <div class="time-line">
-          <div class="time-dot" style="background:${dotColor}"></div>
-          ${connector}
-        </div>
-        <div class="time-content" style="padding:10px 0 20px">
-          <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark)">
-            ${reminder.label}
-          </div>
-
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
-            Take <strong>${med.name} ${reminder.dosage || ''}</strong>
-          </div>
-
-          <div style="font-size:13px;color:var(--text-medium);margin-top:4px">
-            ${reminder.smallNote || ''}
-          </div>
-
-          <div class="reminder-row" style="margin-top:8px">
-            <div class="reminder-chip">
-              ${getReminderIcon(reminder.reminderType)} ${reminder.reminderType}
-            </div>
-            ${speakerChip}
-          </div>
-
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
-            <button
-              class="medium-btn"
-              style="background:var(--gold-pale); color:var(--maroon);"
-              onclick="showToast('✏️ Edit ${reminder.label} coming soon!')"
-            >
-              Edit
-            </button>
-
-            <button
-              class="medium-btn"
-              style="background:var(--red-light); color:var(--red);"
-              onclick="showToast('🗑️ Delete ${reminder.label} coming soon!')"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-}
-
-// ── MED TAKING ──
-let takenCount = 1; // lisinopril pre-taken
-const missedDoseAlertsShown = {};
-
-let alerts = [
-  {
-    id: 'appearance-metformin',
-    type: 'warning',
-    icon: '⚠️',
-    title: 'Metformin appearance changed',
-    text: 'Your pharmacy switched brands. The pill looks different — it is still the same medicine. See photo inside.'
-  }
-];
-
-let currentAlertIndex = 0;
-
-function takeMed(id) {
-  const btn = document.getElementById('check-' + id);
-  if (btn.classList.contains('taken')) return;
-
-  appState.takenMeds[id] = true;
-  saveState();
-
-  btn.classList.add('taken');
-  btn.textContent = '✓';
-
-  takenCount = Object.keys(appState.takenMeds).length;
-  updateProgress();
-
-  alerts = alerts.filter(alert => alert.id !== 'missed-' + id);
-
-  if (currentAlertIndex >= alerts.length) {
-    currentAlertIndex = 0;
-  }
-
-  renderCurrentAlert();
-  showToast('✅ ' + appState.medicines.find(m => m.id === id).name + ' marked as taken!');
-}
-
-function updateProgress() {
-  const total = appState.reminders.length;
-  const taken = appState.reminders.filter(r => appState.takenMeds[r.id]).length;
-  const pct = total ? Math.round((taken / total) * 100) : 0;
-
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('progress-pct').textContent = pct + '%';
-  document.querySelector('.progress-label span').textContent = `${taken} of ${total} taken`;
-
-  if (pct === 100) {
-    setTimeout(() => {
-      showMedTakenSuccess();
-    }, 500);
-  }
-
-  updateWeekOverviewForToday();
-  renderWeekOverview();
-}
-
-// ── MAIN ALERT BANNER ──
-function renderMainAlert() {
-  const banner = document.getElementById('main-alert-banner');
-  const icon = document.getElementById('main-alert-icon');
-  const title = document.getElementById('main-alert-title');
-  const text = document.getElementById('main-alert-text');
-
-  if (!currentBannerNotification) {
-    banner.style.display = 'none';
-    return;
-  }
-
-  banner.style.display = 'flex';
-
-  banner.classList.remove('warning', 'info', 'success');
-  banner.classList.add(currentBannerNotification.type);
-
-  icon.textContent = currentBannerNotification.icon;
-  title.textContent = currentBannerNotification.title;
-  text.textContent = currentBannerNotification.text;
-}
-
-function setMainAlert(type, icon, title, text) {
-  currentBannerNotification = { type, icon, title, text };
-  renderMainAlert();
-}
-
-function closeMainAlert() {
-  currentBannerNotification = null;
-  renderMainAlert();
-}
-
-function renderCurrentAlert() {
-  const banner = document.getElementById('main-alert-banner');
-  const icon = document.getElementById('main-alert-icon');
-  const count = document.getElementById('main-alert-count');
-  const title = document.getElementById('main-alert-title');
-  const text = document.getElementById('main-alert-text');
-  const nextBtn = document.getElementById('next-alert-btn');
-
-  if (!alerts.length) {
-    banner.style.display = 'none';
-    return;
-  }
-
-  if (currentAlertIndex >= alerts.length) {
-    currentAlertIndex = 0;
-  }
-
-  const alert = alerts[currentAlertIndex];
-
-  banner.style.display = 'flex';
-  banner.classList.remove('warning', 'info', 'success');
-  banner.classList.add(alert.type);
-
-  icon.textContent = alert.icon;
-  count.textContent = alerts.length === 1 ? '1 Alert' : `${alerts.length} Alerts`;
-  title.textContent = alert.title;
-  text.textContent = alert.text;
-
-  nextBtn.style.display = alerts.length > 1 ? 'block' : 'none';
-}
-
-function showNextAlert() {
-  if (alerts.length <= 1) return;
-  currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
-  renderCurrentAlert();
-}
-
-function dismissCurrentAlert() {
-  if (!alerts.length) return;
-
-  const removedAlert = alerts[currentAlertIndex];
-  alerts.splice(currentAlertIndex, 1);
-
-  if (removedAlert.id && removedAlert.id.startsWith('missed-')) {
-    const medId = removedAlert.id.replace('missed-', '');
-    missedDoseAlertsShown[medId] = true;
-  }
-
-  if (currentAlertIndex >= alerts.length) {
-    currentAlertIndex = 0;
-  }
-
-  renderCurrentAlert();
-}
-
-function addAlert(newAlert) {
-  const alreadyExists = alerts.some(alert => alert.id === newAlert.id);
-  if (alreadyExists) return;
-
-  alerts.push(newAlert);
-  renderCurrentAlert();
-}
-
-// ── MED Schedule ──
-const scheduleData = {
-  metformin: { hour: 8, minute: 0 },
-  lisinopril: { hour: 12, minute: 0 },
-  atorvastatin: { hour: 21, minute: 0 }
-};
-
-function parseTimeString(timeStr) {
-  const [time, modifier] = timeStr.split(' ');
-  let [hours, minutes] = time.split(':').map(Number);
-
-  if (modifier === 'PM' && hours !== 12) hours += 12;
-  if (modifier === 'AM' && hours === 12) hours = 0;
-
-  return { hours, minutes };
-}
-
-function isMedMissed(id) {
-  const btn = document.getElementById('check-' + id);
-  if (!btn || btn.classList.contains('taken')) return false;
-
-  const reminder = appState.reminders.find(r => r.medId === id);
-  if (!reminder) return false;
-
-  const now = new Date();
-  const dueTime = new Date();
-  const parsed = parseTimeString(reminder.time);
-
-  dueTime.setHours(parsed.hours, parsed.minutes, 0, 0);
-
-  return now > dueTime;
-}
-
-function isReminderMissed(reminderId) {
-  const btn = document.getElementById('check-' + reminderId);
-  if (!btn || btn.classList.contains('taken')) return false;
-
-  const reminder = appState.reminders.find(r => r.id === reminderId);
-  if (!reminder) return false;
-
-  const now = new Date();
-  const dueTime = new Date();
-  const parsed = parseTimeString(reminder.time);
-
-  dueTime.setHours(parsed.hours, parsed.minutes, 0, 0);
-
-  return now > dueTime;
-}
-
-function checkMissedDoses() {
-  appState.reminders.forEach(reminder => {
-    if (isReminderMissed(reminder.id) && !missedDoseAlertsShown[reminder.id]) {
-      const med = appState.medicines.find(m => m.id === reminder.medId);
-      if (!med) return;
-
-      addAlert({
-        id: 'missed-' + reminder.id,
-        type: 'warning',
-        icon: '⏰',
-        title: `${med.name} may have been missed`,
-        text: `The ${reminder.time} reminder looks overdue. Review the medication instructions or contact your care team if you are unsure what to do.`
-      });
-    }
-  });
-}
-
-// ── MED DETAIL MODAL ──
-function openMedDetail(id, reminderId) {
-  const m = appState.medicines.find(m => m.id === id);
-  const reminder = reminderId
-    ? appState.reminders.find(r => r.id === reminderId)
-    : null;
-  if (!m) return;
-
-  let html = `
-    <div class="modal-pill-img" style="background:var(--gray-soft)">💊</div>
-    <div class="modal-pill-name">${m.name}</div>
-    <div class="modal-pill-dose">${reminder?.dosage || ''}</div>
-  `;
-
-  if (m.changed) {
-    html += `
-      <div class="alert-banner warning" style="margin:14px 0">
-        <div class="alert-icon">⚠️</div>
-        <div>
-          <div class="alert-title">Appearance changed!</div>
-          <div class="alert-text">
-            Your pharmacy switched to a generic brand. It is the same medicine — just looks a little different.
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  html += `
-    <div class="pill-visual">
-      <div class="pill-shape-info">
-        <strong>How it looks</strong>
-        ${m.shape}
-      </div>
-    </div>
-
-    <button
-      class="big-btn ghost"
-      style="margin-top:10px; margin-bottom:6px;"
-      onclick="showPillImage('${id}')"
-    >
-      🖼️ View Pill Image
-    </button>
-
-    <div style="font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--text-dark);margin:16px 0 8px">
-      📋 How to take it
-    </div>
-  `;
-
-  (reminder?.steps || []).forEach((s, i) => {
-    html += `
-      <div class="instruction-step">
-        <div class="step-num">${i + 1}</div>
-        <div class="step-text">${s}</div>
-      </div>
-    `;
-  });
-
-  html += `
-  <div class="card">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-      <div class="card-title" style="margin-bottom:0;">Missed a Dose?</div>
-
-      <button
-        type="button"
-        id="missed-dose-toggle-btn"
-        class="missed-toggle-btn"
-        onclick="toggleMissedDoseBox()"
-        aria-expanded="false"
-        aria-controls="missed-dose-content"
-        style="
-          background:none;
-          border:none;
-          cursor:pointer;
-          font-size:20px;
-          font-weight:900;
-          color:var(--text-dark);
-          line-height:1;
-        "
-      >
-        ▾
-      </button>
-    </div>
-
-    <div id="missed-dose-content" style="display:none; margin-top:10px;">
-      <div class="missed-box">
-        <div class="missed-box-title">🔴 What to do if you forget</div>
-        <p style="margin:0;">
-          Take it as soon as you remember. If it's almost time for your next dose, skip the missed one.
-          <strong>Never take two doses at once.</strong>
-        </p>
-      </div>
-
-      <button
-        class="big-btn ghost"
-        style="margin-top:10px"
-        onclick="showToast('📱 Sending message to your care team...')"
-      >
-        📞 Ask My Care Team
-      </button>
-    </div>
-  </div>
-`;
-
-  document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('med-modal').classList.add('open');
-}
-
-function toggleMissedDoseBox() {
-  const content = document.getElementById('missed-dose-content');
-  const button = document.getElementById('missed-dose-toggle-btn');
-
-  if (!content || !button) return;
-
-  const isOpen = content.style.display === 'block';
-
-  content.style.display = isOpen ? 'none' : 'block';
-  button.textContent = isOpen ? '▾' : '▴';
-  button.setAttribute('aria-expanded', String(!isOpen));
-}
-
-function closeMedModal(e) {
-  if (e.target === document.getElementById('med-modal')) {
-    document.getElementById('med-modal').classList.remove('open');
-  }
-}
-function closeMedModalDirect() {
-  document.getElementById('med-modal').classList.remove('open');
-}
-
-// ── PILL IMAGE MODAL ──
-function showPillImage(id) {
-  const m = medData[id];
-  if (!m || !m.image) return;
-
-  document.getElementById('pill-image-content').innerHTML = `
-    <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:var(--text-dark);margin-bottom:6px;">
-      ${m.name}
-    </div>
-    <img
-      src="${m.image}"
-      alt="Reference image for ${m.name}"
-      style="max-width:100%; width:220px; height:auto; border-radius:16px; box-shadow:var(--shadow); margin-bottom:14px;"
-    >
-    <div style="font-size:13px;color:var(--text-medium);line-height:1.5;">
-      ${m.shape}
-    </div>
-  `;
-
-  document.getElementById('pill-image-modal').classList.add('open');
-}
-
-function closePillImageModal(event) {
-  if (event.target === document.getElementById('pill-image-modal')) {
-    document.getElementById('pill-image-modal').classList.remove('open');
-  }
-}
-
-// ── ADD REMINDER MODAL
-function openAddReminderModal() {
-  populateMedicationDropdown();
-  clearAddReminderForm();
-  document.getElementById('add-reminder-modal').classList.add('open');
-}
-
-function closeAddReminderModal(event) {
-  if (event.target === document.getElementById('add-reminder-modal')) {
-    document.getElementById('add-reminder-modal').classList.remove('open');
-  }
-}
-
-function closeAddReminderModalDirect() {
-  document.getElementById('add-reminder-modal').classList.remove('open');
-}
-
-function populateMedicationDropdown() {
-  const select = document.getElementById('reminder-medication');
-  if (!select) return;
-
-  select.innerHTML = '';
-
-  appState.medicines.forEach(med => {
-    const option = document.createElement('option');
-    option.value = med.id;
-    option.textContent = med.name;
-    select.appendChild(option);
-  });
-}
-
-function clearAddReminderForm() {
-  document.getElementById('reminder-label').value = '';
-  document.getElementById('reminder-time').value = '';
-  document.getElementById('reminder-ampm').value = 'AM';
-  document.getElementById('reminder-dosage-amount').value = '';
-  document.getElementById('reminder-dosage-unit').value = 'mg';
-  document.getElementById('reminder-type').value = 'Alarm Set';
-  document.getElementById('reminder-speaker').value = 'On';
-  document.getElementById('reminder-small-note').value = '';
-
-  document.querySelectorAll('#reminder-speaker-toggle .toggle-btn').forEach((btn, index) => {
-    btn.classList.toggle('active', index === 0);
-  });
-
-  const stepsContainer = document.getElementById('reminder-steps-list');
-  if (stepsContainer) {
-    stepsContainer.innerHTML = '';
-    addReminderStepRow();
-  }
-}
-
-function isValidTimeInput(timeStr) {
-  return /^(1[0-2]|[1-9]):[0-5][0-9]$/.test(timeStr.trim());
-}
-
-function setToggleValue(inputId, value, clickedBtn) {
-  const hiddenInput = document.getElementById(inputId);
-  if (hiddenInput) {
-    hiddenInput.value = value;
-  }
-
-  const group = clickedBtn.parentElement;
-  if (!group) return;
-
-  group.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  clickedBtn.classList.add('active');
-}
-
-// -- DYNAMIC REMINDER STEPS --
-function addReminderStepRow(value = '') {
-  const container = document.getElementById('reminder-steps-list');
-  if (!container) return;
-
-  const stepNumber = container.children.length + 1;
-  const row = document.createElement('div');
-
-  row.className = 'reminder-step-row';
-  row.style.display = 'flex';
-  row.style.alignItems = 'center';
-  row.style.gap = '10px';
-
-  row.innerHTML = `
-    <div
-      style="
-        min-width:32px;
-        height:32px;
-        border-radius:50%;
-        background:var(--maroon);
-        color:white;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-family:'Nunito',sans-serif;
-        font-weight:800;
-        font-size:14px;
-        flex-shrink:0;
-      "
-    >
-      ${stepNumber}
-    </div>
-
-    <input
-      type="text"
-      class="reminder-step-input"
-      label="Step ${stepNumber}"
-      placeholder="Enter step ${stepNumber}"
-      value="${value.replace(/"/g, '&quot;')}"
-      style="
-        flex:1;
-        padding:14px;
-        border-radius:12px;
-        border:1px solid #D8D1CA;
-        font-size:15px;
-      "
-    >
-
-    <button
-      type="button"
-      onclick="removeReminderStepRow(this)"
-      aria-label="Remove step ${stepNumber}"
-      style="
-        border:none;
-        background:#FDECEA;
-        color:#C0392B;
-        border-radius:10px;
-        padding:10px 12px;
-        cursor:pointer;
-        font-weight:800;
-      "
-    >
-      ✕
-    </button>
-  `;
-
-  container.appendChild(row);
-  renumberReminderStepRows();
-}
-
-function removeReminderStepRow(buttonEl) {
-  const row = buttonEl.closest('.reminder-step-row');
-  if (!row) return;
-
-  row.remove();
-  renumberReminderStepRows();
-}
-
-function renumberReminderStepRows() {
-  const rows = document.querySelectorAll('#reminder-steps-list .reminder-step-row');
-
-  rows.forEach((row, index) => {
-    const stepNumber = index + 1;
-    const badge = row.children[0];
-    const input = row.querySelector('.reminder-step-input');
-    const removeBtn = row.querySelector('button');
-
-    badge.textContent = stepNumber;
-    input.placeholder = `Enter step ${stepNumber}`;
-    removeBtn.setAttribute('aria-label', `Remove step ${stepNumber}`);
-  });
-}
-
-// -- SAVE NEW REMINDER
-function saveNewReminder() {
-  const medId = document.getElementById('reminder-medication').value;
-  const label = document.getElementById('reminder-label').value.trim();
-  const time = document.getElementById('reminder-time').value.trim();
-  const ampm = document.getElementById('reminder-ampm').value;
-  const dosageAmount = document.getElementById('reminder-dosage-amount').value.trim();
-  const dosageUnit = document.getElementById('reminder-dosage-unit').value;
-  const reminderType = document.getElementById('reminder-type').value;
-  const speakerToggle = document.getElementById('reminder-speaker').value;
-  const smallNote = document.getElementById('reminder-small-note').value.trim();
-  const stepInputs = document.querySelectorAll('.reminder-step-input');
-  const steps = Array.from(stepInputs)
-    .map(input => input.value.trim())
-    .filter(step => step !== '');
-
-  if (!medId) {
-    showToast('Please choose a medication.');
-    return;
-  }
-
-  if (!label) {
-    showToast('Please enter a reminder title.');
-    return;
-  }
-
-  if (!isValidTimeInput(time)) {
-    showToast('Please enter time like 8:00.');
-    return;
-  }
-
-  if (!dosageAmount || !dosageUnit) {
-    showToast('Please enter a dosage.');
-    return;
-  }
-
-  if (!steps.length) {
-    showToast('Please add at least one step.');
-    return;
-  }
-
-  const fullTime = `${time} ${ampm}`;
-  const reminderId = `${medId}-reminder-${Date.now()}`;
-  const dosage = `${dosageAmount} ${dosageUnit}`;
-  const speaker = speakerToggle === 'On' ? 'Smart speaker' : 'Smart speaker off';
-
-  const newReminder = {
-    id: reminderId,
-    medId,
-    label,
-    time: fullTime,
-    dosage,
-    reminderType,
-    speaker,
-    smallNote: smallNote || '',
-    steps
-  };
-
-  appState.reminders.push(newReminder);
-  saveState();
-
-  renderTodayMedications();
-  renderScheduleReminders();
-  updateProgress();
-  checkMissedDoses();
-
-  closeAddReminderModalDirect();
-  showToast('✅ New reminder added!');
-}
-
-// ── WEEKLY OVERVIEW ──
-function getTodayWeekKey() {
-  const dayIndex = new Date().getDay();
-  const map = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
-  return map[dayIndex];
-}
-
-function getWeekOverviewDisplayValue(dayKey, value) {
-  const todayKey = getTodayWeekKey();
-
-  if (value === true) {
-    return {
-      symbol: '✓',
-      background: 'var(--green)'
-    };
-  }
-
-  if (value === false) {
-    return {
-      symbol: '✗',
-      background: '#F5C6C6'
-    };
-  }
-
-  if (dayKey === todayKey) {
-    return {
-      symbol: '↑',
-      background: 'var(--gold)'
-    };
-  }
-
-  return {
-    symbol: '',
-    background: 'var(--gray-soft)'
-  };
-}
-
-function renderWeekOverview() {
-  const container = document.getElementById('weekly-overview-grid');
-  if (!container) return;
-
-  const orderedDays = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
-  container.innerHTML = '';
-
-  orderedDays.forEach(dayKey => {
-    const status = appState.weekOverview?.[dayKey] ?? null;
-    const display = getWeekOverviewDisplayValue(dayKey, status);
-
-    container.innerHTML += `
-      <div>
-        <div style="font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--maroon-dark)">
-          ${dayKey}
-        </div>
-        <div
-          style="
-            width:32px;
-            height:32px;
-            border-radius:50%;
-            background:${display.background};
-            color:${display.symbol === '✓' ? 'white' : 'var(--text-dark)'};
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:14px;
-            margin:4px auto;
-          "
-        >
-          ${display.symbol}
-        </div>
-      </div>
-    `;
-  });
-}
-
-function updateWeekOverviewForToday() {
-  if (!appState.weekOverview) return;
-
-  const todayKey = getTodayWeekKey();
-  const total = appState.reminders.length;
-  const taken = appState.reminders.filter(r => appState.takenMeds[r.id]).length;
-
-  appState.weekOverview[todayKey] = total > 0 && taken === total ? true : null;
-  saveState();
-}
-
-function reminderTimeToMinutes(timeStr) {
-  const { hours, minutes } = parseTimeString(timeStr);
-  return (hours * 60) + minutes;
-}
-
-// ── REFILL ──
-function showRefillSuccess() {
-  document.getElementById('refill-success').classList.add('open');
-}
-function closeRefillSuccess() {
-  document.getElementById('refill-success').classList.remove('open');
-}
-
-function showMedTakenSuccess() {
-  document.getElementById('med-taken-success').classList.add('open');
-}
-function closeMedTakenSuccess() {
-  document.getElementById('med-taken-success').classList.remove('open');
-}
-
-// ── TOAST ──
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-text').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-function getReminderIcon(type) {
-  switch(type) {
-    case 'Alarm Set': return '⏰';
-    case 'Push Notification Set': return '📱';
-    case 'Send Email': return '✉️';
-    case 'Caregiver Alert': return '👥';
-    default: return '🔔';
-  }
-}
-
-function resetAppState() {
-  localStorage.removeItem(STORAGE_KEY);
-  location.reload();
-}
-
-medData = buildMedData();
-renderTodayMedications();
-renderScheduleReminders();
-updateProgress();
-renderCurrentAlert();
-checkMissedDoses();
-renderWeekOverview();
-setInterval(checkMissedDoses, 60000);
-</script>
+<!-- ── SCRIPTS (load order matters) ── -->
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/alerts.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/medications.js"></script>
+<script src="js/reminders.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
