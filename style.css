@@ -302,6 +302,7 @@
   .big-btn {
     width: 100%;
     padding: 16px;
+    margin-bottom: 10px;
     border-radius: var(--radius);
     border: none;
     font-family: 'Nunito', sans-serif;
@@ -733,4 +734,30 @@
     border-color: var(--maroon);
     }
 
+    .manage-med-row {
+    background: var(--white);
+    border: 1px solid var(--gray-soft);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    }
+
+    .manage-med-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    }
+
+    .medium-btn.danger {
+    background: var(--red-light);
+    color: var(--red);
+    }
+
+    .medium-btn.soft {
+    background: var(--gold-pale);
+    color: var(--maroon);
+    }
     
